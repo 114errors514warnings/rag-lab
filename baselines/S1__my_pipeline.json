@@ -1,0 +1,275 @@
+{
+  "stage": "S1",
+  "system": "rag_engine(hashing-tfidf + dense + extractive)",
+  "system_config_hash": "fc3a4c805df7",
+  "eval_version": "v1",
+  "generated_at": "2026-10-08T16:33:43+08:00",
+  "git_commit": null,
+  "suites": {
+    "smoke_v1": {
+      "suite": "smoke_v1",
+      "sha256": "486dcb20f64c96cb",
+      "n_cases": 10,
+      "n_cases_with_labels": 0,
+      "k": 3,
+      "metrics": {
+        "cases": 10.0,
+        "success_rate": 1.0,
+        "error_rate": 0.0,
+        "recall@3": 0.0,
+        "precision@3": 0.0,
+        "mrr": 0.0,
+        "hit@1": 0.0,
+        "citation_precision": 0.0,
+        "citation_missing_rate": 0.0,
+        "leakage_rate": 0.0,
+        "avg_latency_ms": 0.266,
+        "p50_latency_ms": 0.243,
+        "p95_latency_ms": 0.391,
+        "avg_prompt_tokens": 452.7,
+        "cost_per_query_usd": 0.0,
+        "total_cost_usd": 0.0
+      },
+      "per_case": [
+        {
+          "case_id": "s01",
+          "split": "dev",
+          "question": "RAG 的流程包含哪些步骤？",
+          "retrieved": [
+            "readme-md-8ec9a0:0000",
+            "implementation-plan-md-3ac0d9:0033",
+            "implementation-plan-md-3ac0d9:0029"
+          ],
+          "relevant": [],
+          "citations": [
+            "readme-md-8ec9a0:0000",
+            "implementation-plan-md-3ac0d9:0033",
+            "implementation-plan-md-3ac0d9:0029"
+          ],
+          "latency_ms": 0.463,
+          "cost_usd": 0.0,
+          "prompt_tokens": 385,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s02",
+          "split": "dev",
+          "question": "什么是稀疏检索？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0012"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0012"
+          ],
+          "latency_ms": 0.302,
+          "cost_usd": 0.0,
+          "prompt_tokens": 491,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s03",
+          "split": "dev",
+          "question": "为什么要做切块？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001"
+          ],
+          "relevant": [],
+          "citations": [
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001"
+          ],
+          "latency_ms": 0.276,
+          "cost_usd": 0.0,
+          "prompt_tokens": 504,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s04",
+          "split": "dev",
+          "question": "重排的作用是什么？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0012",
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0000"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0012",
+            "stage-gates-md-7f6b4d:0000",
+            "implementation-plan-md-3ac0d9:0000"
+          ],
+          "latency_ms": 0.247,
+          "cost_usd": 0.0,
+          "prompt_tokens": 492,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s05",
+          "split": "dev",
+          "question": "怎么控制上下文成本？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "implementation-plan-md-3ac0d9:0046",
+            "rag-md-896a8e:0004"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "implementation-plan-md-3ac0d9:0046",
+            "rag-md-896a8e:0004"
+          ],
+          "latency_ms": 0.251,
+          "cost_usd": 0.0,
+          "prompt_tokens": 544,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s06",
+          "split": "dev",
+          "question": "增量索引有什么好处？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0002",
+            "implementation-plan-md-3ac0d9:0006",
+            "implementation-plan-md-3ac0d9:0013"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0002",
+            "implementation-plan-md-3ac0d9:0006",
+            "implementation-plan-md-3ac0d9:0013"
+          ],
+          "latency_ms": 0.215,
+          "cost_usd": 0.0,
+          "prompt_tokens": 326,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s07",
+          "split": "dev",
+          "question": "多项目隔离怎么实现？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001"
+          ],
+          "relevant": [],
+          "citations": [
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001"
+          ],
+          "latency_ms": 0.239,
+          "cost_usd": 0.0,
+          "prompt_tokens": 498,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s08",
+          "split": "dev",
+          "question": "Code RAG 用什么解析代码？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0012",
+            "stage-gates-md-7f6b4d:0000",
+            "rag-md-896a8e:0004"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0012",
+            "stage-gates-md-7f6b4d:0000",
+            "rag-md-896a8e:0004"
+          ],
+          "latency_ms": 0.221,
+          "cost_usd": 0.0,
+          "prompt_tokens": 446,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s09",
+          "split": "dev",
+          "question": "父块检索是什么？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "latency_ms": 0.225,
+          "cost_usd": 0.0,
+          "prompt_tokens": 491,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s10",
+          "split": "dev",
+          "question": "哪两种检索可以混合使用？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0029",
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0013"
+          ],
+          "relevant": [],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0029",
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0013"
+          ],
+          "latency_ms": 0.217,
+          "cost_usd": 0.0,
+          "prompt_tokens": 350,
+          "error": null,
+          "citation_precision": 0.0
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "suite": "smoke_v1",
+      "metric": "citation_missing_rate",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.2
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    },
+    {
+      "suite": "smoke_v1",
+      "metric": "error_rate",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.0
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    }
+  ]
+}

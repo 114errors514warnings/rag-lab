@@ -1,0 +1,10 @@
+{"id": "s01", "question": "RAG 的流程包含哪些步骤？", "tags": ["basics"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s02", "question": "什么是稀疏检索？", "tags": ["retrieval"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s03", "question": "为什么要做切块？", "tags": ["chunking"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s04", "question": "重排的作用是什么？", "tags": ["rerank"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s05", "question": "怎么控制上下文成本？", "tags": ["context"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s06", "question": "增量索引有什么好处？", "tags": ["index"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s07", "question": "多项目隔离怎么实现？", "tags": ["isolation"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s08", "question": "Code RAG 用什么解析代码？", "tags": ["code-rag"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s09", "question": "父块检索是什么？", "tags": ["context"], "split": "dev", "added_in_stage": "S1"}
+{"id": "s10", "question": "哪两种检索可以混合使用？", "tags": ["retrieval"], "split": "dev", "added_in_stage": "S1"}

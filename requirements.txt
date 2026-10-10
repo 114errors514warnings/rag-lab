@@ -1,0 +1,11 @@
+# 阶段一最小链路
+pydantic>=2
+numpy>=1.24
+
+# 开发/测试
+pytest>=8
+
+# 可选后端（未安装也能跑离线默认链路）
+# chromadb        # 向量库可选后端（替代 numpy）
+# openai          # OpenAI Embedding / 生成（RAG_EMBED_PROVIDER=openai）
+# pymupdf         # PDF 解析（或 pypdf）

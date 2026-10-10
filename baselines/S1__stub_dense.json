@@ -1,0 +1,255 @@
+{
+  "stage": "S1",
+  "system": "stub_dense (占位件，非真实 Dense 检索)",
+  "system_config_hash": "341bae8c813e",
+  "eval_version": "v1",
+  "generated_at": "2026-10-08T11:42:39+08:00",
+  "git_commit": null,
+  "suites": {
+    "smoke_v1": {
+      "suite": "smoke_v1",
+      "sha256": "486dcb20f64c96cb",
+      "n_cases": 10,
+      "n_cases_with_labels": 0,
+      "k": 3,
+      "metrics": {
+        "cases": 10.0,
+        "success_rate": 1.0,
+        "error_rate": 0.0,
+        "recall@3": 0.0,
+        "precision@3": 0.0,
+        "mrr": 0.0,
+        "hit@1": 0.0,
+        "citation_precision": 0.0,
+        "citation_missing_rate": 0.0,
+        "leakage_rate": 0.0,
+        "avg_latency_ms": 0.212,
+        "p50_latency_ms": 0.202,
+        "p95_latency_ms": 0.276,
+        "avg_prompt_tokens": 15.9,
+        "cost_per_query_usd": 0.0,
+        "total_cost_usd": 0.0
+      },
+      "per_case": [
+        {
+          "case_id": "s01",
+          "split": "dev",
+          "question": "RAG 的流程包含哪些步骤？",
+          "retrieved": [
+            "c01",
+            "d04",
+            "d02"
+          ],
+          "relevant": [],
+          "citations": [
+            "c01"
+          ],
+          "latency_ms": 0.314,
+          "cost_usd": 0.0,
+          "prompt_tokens": 18,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s02",
+          "split": "dev",
+          "question": "什么是稀疏检索？",
+          "retrieved": [
+            "c03",
+            "c05",
+            "c01"
+          ],
+          "relevant": [],
+          "citations": [
+            "c03"
+          ],
+          "latency_ms": 0.229,
+          "cost_usd": 0.0,
+          "prompt_tokens": 13,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s03",
+          "split": "dev",
+          "question": "为什么要做切块？",
+          "retrieved": [
+            "c09",
+            "c01",
+            "c02"
+          ],
+          "relevant": [],
+          "citations": [
+            "c09"
+          ],
+          "latency_ms": 0.206,
+          "cost_usd": 0.0,
+          "prompt_tokens": 13,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s04",
+          "split": "dev",
+          "question": "重排的作用是什么？",
+          "retrieved": [
+            "c02",
+            "c09",
+            "d08"
+          ],
+          "relevant": [],
+          "citations": [
+            "c02"
+          ],
+          "latency_ms": 0.198,
+          "cost_usd": 0.0,
+          "prompt_tokens": 15,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s05",
+          "split": "dev",
+          "question": "怎么控制上下文成本？",
+          "retrieved": [
+            "c08",
+            "d08",
+            "c09"
+          ],
+          "relevant": [],
+          "citations": [
+            "c08"
+          ],
+          "latency_ms": 0.211,
+          "cost_usd": 0.0,
+          "prompt_tokens": 17,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s06",
+          "split": "dev",
+          "question": "增量索引有什么好处？",
+          "retrieved": [
+            "c10",
+            "c01",
+            "c04"
+          ],
+          "relevant": [],
+          "citations": [
+            "c10"
+          ],
+          "latency_ms": 0.192,
+          "cost_usd": 0.0,
+          "prompt_tokens": 17,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s07",
+          "split": "dev",
+          "question": "多项目隔离怎么实现？",
+          "retrieved": [
+            "c12",
+            "c13",
+            "d01"
+          ],
+          "relevant": [],
+          "citations": [
+            "c12"
+          ],
+          "latency_ms": 0.186,
+          "cost_usd": 0.0,
+          "prompt_tokens": 17,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s08",
+          "split": "dev",
+          "question": "Code RAG 用什么解析代码？",
+          "retrieved": [
+            "c11",
+            "c01",
+            "c02"
+          ],
+          "relevant": [],
+          "citations": [
+            "c11"
+          ],
+          "latency_ms": 0.187,
+          "cost_usd": 0.0,
+          "prompt_tokens": 15,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s09",
+          "split": "dev",
+          "question": "父块检索是什么？",
+          "retrieved": [
+            "c09",
+            "c01",
+            "c03"
+          ],
+          "relevant": [],
+          "citations": [
+            "c09"
+          ],
+          "latency_ms": 0.184,
+          "cost_usd": 0.0,
+          "prompt_tokens": 13,
+          "error": null,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "s10",
+          "split": "dev",
+          "question": "哪两种检索可以混合使用？",
+          "retrieved": [
+            "d07",
+            "c05",
+            "d01"
+          ],
+          "relevant": [],
+          "citations": [
+            "d07"
+          ],
+          "latency_ms": 0.217,
+          "cost_usd": 0.0,
+          "prompt_tokens": 21,
+          "error": null,
+          "citation_precision": 0.0
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "suite": "smoke_v1",
+      "metric": "citation_missing_rate",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.2
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    },
+    {
+      "suite": "smoke_v1",
+      "metric": "error_rate",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.0
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    }
+  ]
+}

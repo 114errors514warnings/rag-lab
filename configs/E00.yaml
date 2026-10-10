@@ -1,0 +1,15 @@
+experiment_id: E00
+description: 固定基线：固定块 + Dense Top-5，无重排
+dataset: data/golden/cases.jsonl
+suite_split: all      # 基线与 trace 完整性用全部题；质量对比时改用 validation
+k: 5
+system:
+  chunk_size: 400
+  chunk_overlap: 80
+  embed_provider: hashing
+  embed_dim: 1024
+  top_k: 5
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates: {}             # 基线不设虚假质量门槛；只产出数值

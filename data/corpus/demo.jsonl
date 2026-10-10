@@ -1,0 +1,22 @@
+{"chunk_id": "c01", "source": "docs/rag-basics.md", "project_id": "proj-demo", "text": "RAG 的基础流程包括文档解析、切块、向量化、检索与生成。"}
+{"chunk_id": "c02", "source": "docs/rag-basics.md", "project_id": "proj-demo", "text": "固定长度切块通常配合 overlap 重叠使用，以缓解句子被硬切断造成的语义损失。"}
+{"chunk_id": "c03", "source": "docs/retrieval.md", "project_id": "proj-demo", "text": "BM25 是一种稀疏检索算法，基于词频与逆文档频率对候选文档排序。"}
+{"chunk_id": "c04", "source": "docs/retrieval.md", "project_id": "proj-demo", "text": "向量检索 Dense Retrieval 使用嵌入模型把查询与文档映射到同一向量空间做相似度匹配。"}
+{"chunk_id": "c05", "source": "docs/retrieval.md", "project_id": "proj-demo", "text": "混合检索 Hybrid Search 同时执行稀疏与稠密两路检索，然后把两路结果合并。"}
+{"chunk_id": "c06", "source": "docs/retrieval.md", "project_id": "proj-demo", "text": "RRF Reciprocal Rank Fusion 按排名的倒数加权融合多路结果，无需分数归一化。"}
+{"chunk_id": "c07", "source": "docs/rerank.md", "project_id": "proj-demo", "text": "Cross-Encoder 重排模型对查询与文档逐对打分，精度更高，但耗时与开销明显上升。"}
+{"chunk_id": "c08", "source": "docs/context.md", "project_id": "proj-demo", "text": "Token Budget 用于限制送入大模型的上下文长度，从而控制成本与延迟。"}
+{"chunk_id": "c09", "source": "docs/context.md", "project_id": "proj-demo", "text": "Parent-Child Retrieval 先用小块做检索，再返回小块所属的父块作为生成上下文。"}
+{"chunk_id": "c10", "source": "docs/index.md", "project_id": "proj-demo", "text": "增量索引只重建发生变化的文档所对应的切片，避免每次改动都全量重建。"}
+{"chunk_id": "c11", "source": "docs/code-rag.md", "project_id": "proj-a", "text": "Code RAG 使用 AST 解析代码，为函数、类、方法建立符号索引并记录调用关系。"}
+{"chunk_id": "c12", "source": "docs/multi-project.md", "project_id": "proj-demo", "text": "多项目隔离要求每个切片都带有 project_id，检索时按项目过滤，避免串味。"}
+{"chunk_id": "c13", "source": "docs/other-project.md", "project_id": "proj-b", "text": "另一个项目的内部调度算法说明，仅用于验证多项目隔离。"}
+{"chunk_id": "d01", "source": "notes/general.md", "project_id": "proj-demo", "text": "本项目的整体说明文档，介绍了系统的背景、目标、涉及的多种方案与实现方式，以及在不同场景下的取舍和注意事项，内容较长，涵盖检索、生成、数据、模型、成本、时间等多个方面的通用描述。"}
+{"chunk_id": "d02", "source": "notes/general.md", "project_id": "proj-demo", "text": "一些关于工程实践方式的讨论记录：在实现一个功能时，通常需要考虑不同的实现方式、方案的优缺点、以及在实际使用中的效果，还需要关注系统的可维护性和后续的更新成本，这里汇总了多种常见做法。"}
+{"chunk_id": "d03", "source": "notes/general.md", "project_id": "proj-demo", "text": "关于模型使用方式的说明：不同的模型在不同的任务上表现不同，需要根据具体问题选择合适的模型，同时要注意调用的成本与响应时间，以及输入内容长度对结果的影响，这些都需要在实现时综合考虑。"}
+{"chunk_id": "d04", "source": "notes/general.md", "project_id": "proj-demo", "text": "数据处理的常见问题汇总：数据在进入系统之前通常需要经过多个步骤的处理，包括格式整理、内容检查、以及必要的转换，处理方式的选择会影响后续各个环节的效果，因此需要结合具体场景来设计。"}
+{"chunk_id": "d05", "source": "notes/general.md", "project_id": "proj-demo", "text": "关于项目隔离与多项目的补充说明：在同一个系统里管理多个项目的相关内容时，需要关注数据归属、访问范围、以及不同项目之间的边界问题，具体的做法与前置条件参见相关章节的说明。"}
+{"chunk_id": "d06", "source": "notes/general.md", "project_id": "proj-demo", "text": "性能相关记录：不同环节的耗时差异较大，整体的响应时间由多个部分共同决定，优化时需要先定位主要瓶颈，再选择合适的改进方式，同时要评估改动带来的其它影响。"}
+{"chunk_id": "d07", "source": "notes/general.md", "project_id": "proj-demo", "text": "关于检索相关内容的一般性说明：检索的效果与多种因素有关，包括内容的组织方式、查询的表达方式、以及匹配策略的选择，实际使用中需要结合具体数据来调整参数。"}
+{"chunk_id": "d08", "source": "notes/general.md", "project_id": "proj-demo", "text": "常见问题的记录：很多问题的原因并不单一，需要结合上下文来判断；解决方式也往往有多种，可以先用简单方法验证，再决定是否引入更复杂的机制，避免过度设计带来的额外成本。"}
+

@@ -1,0 +1,21 @@
+{"id": "q01", "question": "BM25 是什么类型的检索算法？", "expected_answer": "基于词频与逆文档频率的稀疏检索算法。", "relevant_chunk_ids": ["c03"], "tags": ["retrieval", "keyword"], "split": "dev"}
+{"id": "q02", "question": "两路检索结果怎么合并？", "expected_answer": "用 RRF 等融合算法按排名倒数加权合并。", "relevant_chunk_ids": ["c05", "c06"], "tags": ["retrieval", "fusion"], "split": "dev"}
+{"id": "q03", "question": "重排的开销太大怎么办？", "expected_answer": "缩减候选数或改用更轻的重排方案。", "relevant_chunk_ids": ["c07"], "tags": ["rerank", "cost"], "split": "dev"}
+{"id": "q04", "question": "上下文太长怎么控制？", "expected_answer": "设置 Token Budget 限制上下文长度。", "relevant_chunk_ids": ["c08"], "tags": ["context"], "split": "dev"}
+{"id": "q05", "question": "怎么保证检索到的内容不会串到别的项目？", "expected_answer": "切片带 project_id 并按项目过滤。", "relevant_chunk_ids": ["c12"], "tags": ["isolation"], "split": "dev"}
+{"id": "q06", "question": "代码库怎么做检索？", "expected_answer": "用 AST 解析并建立符号索引。", "relevant_chunk_ids": ["c11"], "tags": ["code-rag"], "split": "dev"}
+{"id": "q07", "question": "分块会不会破坏语义？", "expected_answer": "用 overlap 重叠缓解硬切断。", "relevant_chunk_ids": ["c02"], "tags": ["chunking"], "split": "dev"}
+{"id": "q08", "question": "每次改一个文档都要重新建整个索引吗？", "expected_answer": "不需要，增量索引只重建受影响切片。", "relevant_chunk_ids": ["c10"], "tags": ["index"], "split": "dev"}
+{"id": "q09", "question": "先用小块找、再用大块喂给模型的做法叫什么？", "expected_answer": "Parent-Child Retrieval。", "relevant_chunk_ids": ["c09"], "tags": ["context"], "split": "dev"}
+{"id": "q10", "question": "Dense Retrieval 的原理是什么？", "expected_answer": "把查询与文档映射到同一向量空间做相似度匹配。", "relevant_chunk_ids": ["c04"], "tags": ["retrieval", "dense"], "split": "dev"}
+{"id": "q11", "question": "RAG 的基本步骤有哪些？", "expected_answer": "解析、切块、向量化、检索、生成。", "relevant_chunk_ids": ["c01"], "tags": ["basics"], "split": "dev"}
+{"id": "q12", "question": "多路排名怎么融合？", "expected_answer": "RRF 按排名倒数加权融合。", "relevant_chunk_ids": ["c06"], "tags": ["retrieval", "fusion"], "split": "dev"}
+{"id": "q13", "question": "精排模型为什么精度高但慢？", "expected_answer": "逐对打分计算量大。", "relevant_chunk_ids": ["c07"], "tags": ["rerank"], "split": "holdout"}
+{"id": "q14", "question": "怎么防止跨项目越权检索？", "expected_answer": "metadata 过滤 project_id。", "relevant_chunk_ids": ["c12"], "tags": ["isolation"], "split": "holdout"}
+{"id": "q15", "question": "精排环节太慢，怎么省时间？", "expected_answer": "减少候选或换更轻的方案。", "relevant_chunk_ids": ["c07"], "tags": ["rerank", "latency"], "split": "dev", "added_in_stage": "S3"}
+{"id": "q16", "question": "怎么避免答案里混进其它仓库的内容？", "expected_answer": "按项目标识过滤。", "relevant_chunk_ids": ["c12"], "tags": ["isolation"], "split": "dev", "added_in_stage": "S3"}
+{"id": "q17", "question": "长回答要怎么压缩才省钱？", "expected_answer": "限制上下文长度的预算。", "relevant_chunk_ids": ["c08"], "tags": ["context"], "split": "dev", "added_in_stage": "S3"}
+{"id": "q18", "question": "代码里怎么找某个方法的定义？", "expected_answer": "用符号索引按方法名定位。", "relevant_chunk_ids": ["c11"], "tags": ["code-rag"], "split": "dev", "added_in_stage": "S3"}
+{"id": "q19", "question": "改了文件以后要重建多少东西？", "expected_answer": "只重建受影响切片。", "relevant_chunk_ids": ["c10"], "tags": ["index"], "split": "dev", "added_in_stage": "S3"}
+{"id": "q20", "question": "两路召回的分数不在同一量纲怎么办？", "expected_answer": "用 RRF 按排名融合，无需归一化分数。", "relevant_chunk_ids": ["c06"], "tags": ["retrieval", "fusion"], "split": "holdout", "added_in_stage": "S3"}
+

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 本地构建产物：向量索引可由 data/kb 重建，不入库
+data/index/
+.pytest_cache/
+traces/
+snapshots/
+# 运行产物：仓库根 reports/{run_id}/ 为可重跑的临时报告，不入库；
+# 注意用前导斜杠只忽略根目录，保留 docs/reports/（文档报告）
+/reports/
+
+# 评测产物：baselines/ 需要入库（它是历史结论的依据）

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "RAG Project Knowledge Engine · Round 0",
+    "subtitle": "阶段一最小链路 + M0 实验平台（E00 基线）",
+    "output": "docs/reports/R0/diagrams/round-0.architecture.html",
+    "quality_profile": "showcase",
+    "locale": "zh-CN"
+  },
+  "components": [
+    { "id": "agent", "type": "external", "label": "Agent / 用户", "sublabel": "自然语言问题", "pos": [280, 380], "size": [150, 64] },
+    { "id": "corpus", "type": "database", "label": "data/kb", "sublabel": "proj-auth · proj-sched", "pos": [40, 150], "size": [160, 64], "tag": "10 文件" },
+    { "id": "ingest", "type": "backend", "label": "Loader + Chunker", "sublabel": "TXT / MD / PY / PDF", "pos": [280, 150], "size": [160, 64] },
+    { "id": "embedder", "type": "backend", "label": "HashingTFIDF", "sublabel": "L2 归一化", "pos": [520, 150], "size": [150, 64] },
+    { "id": "vstore", "type": "database", "label": "Numpy 向量库", "sublabel": "内积 = 余弦", "pos": [760, 150], "size": [150, 64] },
+    { "id": "retriever", "type": "backend", "label": "Dense Top-K", "sublabel": "project_id 过滤", "pos": [760, 380], "size": [150, 64] },
+    { "id": "generator", "type": "backend", "label": "Extractive 生成", "sublabel": "带引用 + 拒答标记", "pos": [520, 380], "size": [150, 64] },
+    { "id": "adapter", "type": "backend", "label": "eval_adapter", "sublabel": "Sut 契约桥", "pos": [1000, 380], "size": [150, 64] },
+    { "id": "snapshot", "type": "cloud", "label": "snapshot.py", "sublabel": "文件 sha256 · 排除规则", "pos": [40, 620], "size": [160, 64] },
+    { "id": "golden", "type": "database", "label": "Golden v2", "sublabel": "32 题 · 证据制", "pos": [280, 620], "size": [150, 64] },
+    { "id": "runner", "type": "backend", "label": "run_eval.py", "sublabel": "配置驱动 E00", "pos": [1000, 620], "size": [150, 64] },
+    { "id": "metrics", "type": "backend", "label": "rag_eval 指标", "sublabel": "覆盖 / nDCG / 配对 CI", "pos": [1240, 620], "size": [160, 64] },
+    { "id": "traces", "type": "database", "label": "reports/ · traces/", "sublabel": "指标 + 失败归因", "pos": [1480, 620], "size": [170, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "rag_engine · 被测系统（阶段一）", "wraps": ["ingest", "embedder", "vstore", "retriever", "generator", "adapter"] },
+    { "kind": "region", "label": "rag_lab + rag_eval · 实验平台（M0）", "wraps": ["snapshot", "golden", "runner", "metrics", "traces"] },
+    { "kind": "security-group", "label": "project_id 隔离", "wraps": ["vstore", "retriever"] }
+  ],
+  "connections": [
+    { "id": "agent-question", "from": "agent", "to": "retriever", "label": "问题 query", "variant": "emphasis" },
+    { "id": "parse", "from": "corpus", "to": "ingest", "label": "解析" },
+    { "id": "chunk", "from": "ingest", "to": "embedder", "label": "切块" },
+    { "id": "embed", "from": "embedder", "to": "vstore", "label": "向量" },
+    { "id": "index-lookup", "from": "vstore", "to": "retriever", "label": "top-k 候选" },
+    { "id": "retrieve", "from": "retriever", "to": "generator", "label": "证据片段" },
+    { "id": "answer", "from": "generator", "to": "agent", "label": "带引用回答" },
+    { "id": "drive-system", "from": "adapter", "to": "retriever", "label": "answer(case, k)" },
+    { "id": "run-case", "from": "runner", "to": "adapter", "label": "配置 + 用例" },
+    { "id": "load-golden", "from": "golden", "to": "runner", "label": "32 题" },
+    { "id": "hash-corpus", "from": "snapshot", "to": "corpus", "label": "sha256" },
+    { "id": "score", "from": "runner", "to": "metrics", "label": "逐题结果" },
+    { "id": "report", "from": "metrics", "to": "traces", "label": "指标 + 归因", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "交付 A · 系统（阶段一）", "items": ["解析 → 切块 → 嵌入 → 检索 → 带引用生成", "numpy 内积 = 余弦，可持久化", "多项目 project_id 过滤，避免串味"] },
+    { "dot": "emerald", "title": "交付 B / C · 实验平台（M0）", "items": ["Golden v2：32 题，证据精确到行区间与符号", "配置驱动运行器，产出 run_id 报告与 Trace", "配对 bootstrap 95% CI + 失败归因决策树"] },
+    { "dot": "rose", "title": "R0 已知缺口", "items": ["拒答机制缺失（no_answer_accuracy = 0）", "Embedding 为离线 hashing-tfidf，非神经网络", "切块按字符，尚未对齐 512 tokens 口径"] }
+  ]
+}

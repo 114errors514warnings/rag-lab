@@ -1,0 +1,9 @@
+# 统一换行符为 LF：评测会对数据套件做 sha256 校验，
+# 若在 Windows 上被转成 CRLF，哈希与冻结基线不一致会导致误判。
+* text=auto eol=lf
+
+# 明确二进制（避免被当作文本处理）
+*.npy binary
+*.png binary
+*.jpg binary
+*.ico binary

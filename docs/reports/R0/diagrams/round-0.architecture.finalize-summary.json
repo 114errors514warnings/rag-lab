@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\MY\\My Projects\\实践项目合集\\RAG\\docs\\reports\\R0\\diagrams\\round-0.architecture.json",
+    "sha256": "47decf3d9f671c9e20b61bd0fe174534cf87407430a7bcf1514908fd3abf633b",
+    "bytes": 4569
+  },
+  "artifact": {
+    "path": "D:\\MY\\My Projects\\实践项目合集\\RAG\\docs\\reports\\R0\\diagrams\\round-0.architecture.html",
+    "sha256": "3d812621c731de50e453d88c7569d083442b9402fa6b0b66c7c90e3f94be914d",
+    "bytes": 772547
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\MY\\My Projects\\实践项目合集\\RAG\\docs\\reports\\R0\\diagrams\\round-0.architecture.finalize.json",
+    "summaryReceipt": "D:\\MY\\My Projects\\实践项目合集\\RAG\\docs\\reports\\R0\\diagrams\\round-0.architecture.finalize-summary.json",
+    "browserCheckReceipt": "D:\\MY\\My Projects\\实践项目合集\\RAG\\docs\\reports\\R0\\diagrams\\round-0.architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.0.1",
+    "availableVersion": "3.0.1",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-09T08:06:04.128Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 6605
+}

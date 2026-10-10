@@ -1,0 +1,85 @@
+{
+  "eval_version": "v2",
+  "_comment": "判定规则（固定资产）。primary 是主指标，guardrails 是护栏指标。min_delta/max_delta 相对 baseline 报告，max 是绝对上限。",
+  "stages": {
+    "S1": {
+      "suites": ["smoke_v1"],
+      "k": 3,
+      "primary": { "citation_missing_rate": { "max": 0.2 } },
+      "guardrails": { "error_rate": { "max": 0.0 } },
+      "note": "阶段一无标注：只测可答性与引用可回溯，本次报告作为 baseline 数值冻结"
+    },
+    "S2": {
+      "suites": ["smoke_v1"],
+      "k": 3,
+      "primary": { "error_rate": { "max": 0.0 } },
+      "guardrails": { "citation_missing_rate": { "max_delta": 0.0 } },
+      "note": "阶段二主产出是功能性（增量索引精确率），由 tests/ 断言；此处只跑回归"
+    },
+    "S3": {
+      "suites": ["retrieval_v1"],
+      "k": 3,
+      "primary": { "mrr": { "min_delta": 0.1 }, "recall@3": { "min_delta": 0.05 } },
+      "guardrails": {
+        "p95_latency_ms": { "max": 500.0 },
+        "cost_per_query_usd": { "max": 0.005 }
+      },
+      "note": "检索优化门禁：排序质量(MRR)提升 ≥0.10、召回提升 ≥0.05；延迟与成本不得越线"
+    },
+    "S4": {
+      "suites": ["retrieval_v1"],
+      "k": 5,
+      "primary": { "citation_precision": { "min_delta": 0.0 } },
+      "guardrails": { "avg_prompt_tokens": { "max": 2000.0 } },
+      "note": "上下文门禁：引用精度不得下降，同时上下文 token 受预算约束"
+    },
+    "S5": {
+      "suites": [],
+      "k": 10,
+      "primary": { "recall@10": { "min_delta": 0.0 } },
+      "guardrails": { "leakage_rate": { "max": 0.0 } },
+      "note": "需先编写 code_v1 套件（question -> expected_symbols + project_id）"
+    },
+    "S6": {
+      "suites": ["smoke_v1", "retrieval_v1"],
+      "k": 3,
+      "primary": {},
+      "guardrails": {
+        "recall@3": { "max_delta": -0.01 },
+        "error_rate": { "max": 0.0 }
+      },
+      "note": "回归门禁：全部指标不得回退超过容忍带"
+    },
+    "S7": {
+      "suites": ["smoke_v1"],
+      "k": 3,
+      "primary": { "success_rate": { "min_delta": 0.0 } },
+      "guardrails": {},
+      "note": "服务化门禁：通过真实客户端调用后的成功率与端到端延迟"
+    },
+    "M1": {
+      "suites": ["smoke_v1"],
+      "k": 3,
+      "primary": { "citation_missing_rate": { "max": 0.2 } },
+      "guardrails": { "error_rate": { "max": 0.0 } },
+      "note": "方案 B · 里程碑一 = 阶段一 + 阶段二"
+    },
+    "M2": {
+      "suites": ["retrieval_v1"],
+      "k": 3,
+      "primary": { "mrr": { "min_delta": 0.1 }, "recall@3": { "min_delta": 0.05 } },
+      "guardrails": {
+        "p95_latency_ms": { "max": 500.0 },
+        "cost_per_query_usd": { "max": 0.005 }
+      },
+      "note": "方案 B · 里程碑二 = 阶段三 + 阶段四（检索与上下文联合调优）"
+    },
+    "M3": {
+      "suites": ["retrieval_v1"],
+      "k": 10,
+      "primary": { "recall@10": { "min_delta": 0.0 } },
+      "guardrails": { "error_rate": { "max": 0.0 } },
+      "note": "方案 B · 里程碑三 = 阶段五 + 六 + 七"
+    }
+  }
+}
