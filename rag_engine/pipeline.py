@@ -61,9 +61,16 @@ class RAGPipeline:
     def build(cls, config: EngineConfig, docs: list[Document]) -> "RAGPipeline":
         # 阶段二：清洗 + 去重 + 元数据 enrichment（切块边界契约不变，chunk_id 仍稳定）
         docs = dedupe_documents(clean_documents(docs))[0]
-        chunks = chunk_documents(docs, size=config.chunk_size, overlap=config.chunk_overlap)
+        if getattr(config, "chunking", "fixed") == "symbol":
+            from .ingest.symbol_chunker import chunk_documents_symbol
+
+            chunks = chunk_documents_symbol(docs, size=config.chunk_size, overlap=config.chunk_overlap)
+        else:
+            chunks = chunk_documents(docs, size=config.chunk_size, overlap=config.chunk_overlap)
         by_id = {doc.doc_id: doc for doc in docs}
         for chunk in chunks:
+            if chunk.meta.get("symbol"):
+                continue  # 符号块自带 meta（symbol/kind/file/span），不覆盖
             doc = by_id.get(chunk.doc_id)
             if doc is not None:
                 chunk.meta.update(build_chunk_meta(

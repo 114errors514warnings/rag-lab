@@ -21,6 +21,8 @@ class EngineConfig:
     # --- 切块 ---
     chunk_size: int = 400  # 字符数（中英通用）
     chunk_overlap: int = 80
+    #: 切块模式：fixed（定长，默认）| symbol（代码按函数/类/方法切，非代码退回定长）
+    chunking: str = "fixed"
 
     # --- Embedding ---
     embed_provider: str = "hashing"  # hashing（离线默认）| openai
