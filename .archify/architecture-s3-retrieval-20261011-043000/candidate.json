@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "rag-lab · S3 检索质量优化架构",
+    "subtitle": "BM25 · Dense+BM25 RRF 融合 · Rerank · Query Rewrite",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "query", "type": "external", "label": "用户查询", "sublabel": "retrieval_v1", "pos": [40, 140], "size": [120, 56] },
+    { "id": "rewrite", "type": "backend", "label": "查询改写", "sublabel": "rewrite / multi-query", "pos": [210, 140], "size": [130, 56] },
+    { "id": "dense", "type": "backend", "label": "Dense 检索", "sublabel": "向量 Top-N", "pos": [390, 60], "size": [140, 56] },
+    { "id": "sparse", "type": "backend", "label": "BM25 检索", "sublabel": "词汇 Top-N", "pos": [390, 220], "size": [140, 56] },
+    { "id": "rrf", "type": "backend", "label": "RRF 融合", "sublabel": "Σ 1/(k+rank)", "pos": [580, 140], "size": [130, 56] },
+    { "id": "rerank", "type": "backend", "label": "Rerank", "sublabel": "top-50 候选", "pos": [760, 140], "size": [130, 56] },
+    { "id": "gen", "type": "backend", "label": "生成", "sublabel": "带引用回答", "pos": [940, 140], "size": [150, 56] }
+  ],
+  "connections": [
+    { "id": "query-rewrite", "from": "query", "to": "rewrite", "label": "改写", "variant": "emphasis" },
+    { "id": "rewrite-dense", "from": "rewrite", "to": "dense", "label": "语义" },
+    { "id": "rewrite-sparse", "from": "rewrite", "to": "sparse", "label": "词汇" },
+    { "id": "dense-rrf", "from": "dense", "to": "rrf" },
+    { "id": "sparse-rrf", "from": "sparse", "to": "rrf" },
+    { "id": "rrf-rerank", "from": "rrf", "to": "rerank", "label": "融合" },
+    { "id": "rerank-gen", "from": "rerank", "to": "gen", "label": "精排" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "四方案对比（清单 L48）", "items": ["Dense / BM25 / Hybrid / Rerank 各跑一次", "报告横向对比，config_hash 随方案变化"] },
+    { "dot": "emerald", "title": "RRF 融合", "items": ["score = Σ 1/(k + rank)，无需量纲归一化", "融合确定性：同输入同输出（L1 断言）"] },
+    { "dot": "rose", "title": "门禁（S3）", "items": ["主：MRR Δ≥+0.10、Recall@3 Δ≥+0.05", "护栏：p95 ≤ 500ms、单查询成本 ≤ $0.005"] },
+    { "dot": "amber", "title": "套件", "items": ["retrieval_v1（20 题，含 relevant_chunk_ids + dev/holdout）", "冻结使用，新增用例标 added_in_stage"] }
+  ]
+}

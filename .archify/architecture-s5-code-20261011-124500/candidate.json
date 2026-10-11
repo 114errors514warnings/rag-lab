@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "rag-lab · S5 Code RAG 架构",
+    "subtitle": "AST 符号索引 · 结构化切块 · 多项目隔离",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-s5-code-20261011-124500/s5-code-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "scanner", "type": "backend", "label": "代码扫描", "sublabel": "rglob *.py", "pos": [40, 140], "size": [130, 56] },
+    { "id": "ast", "type": "backend", "label": "AST 符号提取", "sublabel": "函数 / 类 / 方法", "pos": [220, 140], "size": [140, 56] },
+    { "id": "chunks", "type": "database", "label": "结构化切块", "sublabel": "symbol·kind·file·span·deps", "pos": [410, 140], "size": [150, 56] },
+    { "id": "dense", "type": "backend", "label": "Dense / BM25", "sublabel": "符号检索", "pos": [610, 140], "size": [140, 56] },
+    { "id": "iso", "type": "security", "label": "项目隔离", "sublabel": "project_id 过滤", "pos": [800, 140], "size": [150, 56] },
+    { "id": "gen", "type": "backend", "label": "生成 / 服务", "sublabel": "get_symbol / 回答", "pos": [1000, 140], "size": [140, 56] }
+  ],
+  "connections": [
+    { "id": "scanner-ast", "from": "scanner", "to": "ast", "label": "扫描", "variant": "emphasis" },
+    { "id": "ast-chunks", "from": "ast", "to": "chunks", "label": "符号" },
+    { "id": "chunks-dense", "from": "chunks", "to": "dense", "label": "向量" },
+    { "id": "dense-iso", "from": "dense", "to": "iso", "label": "过滤" },
+    { "id": "iso-gen", "from": "iso", "to": "gen", "label": "输出" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "套件 code_v1", "items": ["question → expected_symbols + relevant_chunk_ids + project_id", "至少含两个项目，才能测出泄漏"] },
+    { "dot": "emerald", "title": "结构化切块", "items": ["以函数/类/方法为单位，块头写 symbol/kind/file/span/deps", "chunk_id 稳定：{project}:{file}:{symbol}"] },
+    { "dot": "rose", "title": "隔离护栏", "items": ["检索按 project_id 前置过滤", "leakage_rate 必须为 0（硬门禁）"] },
+    { "dot": "amber", "title": "依赖关系", "items": ["build_dependency_graph 给出 callers/callees", "供 get_symbol 返回调用点与跨文件依赖"] }
+  ]
+}

@@ -18,7 +18,9 @@ from .embed.embedder import HashingTfidfEmbedder, OpenAIEmbedder, build_embedder
 from .generate.generator import Generation, build_generator
 from .index.vector_store import NumpyVectorStore
 from .ingest.chunker import chunk_documents
+from .ingest.clean import clean_documents, dedupe_documents
 from .ingest.loader import iter_source_files, load_tree
+from .ingest.metadata import build_chunk_meta
 from .retrieve.dense import DenseRetriever
 from .schema import Document, Retrieved
 
@@ -57,7 +59,16 @@ class RAGPipeline:
     # ------------------------------------------------------------ 构建
     @classmethod
     def build(cls, config: EngineConfig, docs: list[Document]) -> "RAGPipeline":
+        # 阶段二：清洗 + 去重 + 元数据 enrichment（切块边界契约不变，chunk_id 仍稳定）
+        docs = dedupe_documents(clean_documents(docs))[0]
         chunks = chunk_documents(docs, size=config.chunk_size, overlap=config.chunk_overlap)
+        by_id = {doc.doc_id: doc for doc in docs}
+        for chunk in chunks:
+            doc = by_id.get(chunk.doc_id)
+            if doc is not None:
+                chunk.meta.update(build_chunk_meta(
+                    doc, doc.text, chunk.meta.get("start", 0), chunk.meta.get("end", 0),
+                    chunk.meta.get("order", 0)))
         texts = [c.text for c in chunks]
         embedder = build_embedder(config.embed_provider, config.embed_dim, config.embed_model, texts)
         vectors = embedder.embed(texts)

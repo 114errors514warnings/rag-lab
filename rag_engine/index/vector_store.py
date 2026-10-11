@@ -68,6 +68,20 @@ class NumpyVectorStore:
                 break
         return hits
 
+    def remove_doc_ids(self, doc_ids: set[str]) -> list[str]:
+        """删除属于给定 ``doc_id`` 的全部切片；返回被删除的 ``chunk_id``。
+
+        只做行切片，**保留行的向量逐字节不变**（增量索引的核心不变量）。
+        """
+        removed = [c.chunk_id for c in self.chunks if c.doc_id in doc_ids]
+        if not removed:
+            return []
+        keep_idx = [i for i, c in enumerate(self.chunks) if c.doc_id not in doc_ids]
+        self.chunks = [self.chunks[i] for i in keep_idx]
+        if self._matrix is not None:
+            self._matrix = self._matrix[keep_idx] if keep_idx else None
+        return removed
+
     # ------------------------------------------------------------ 持久化
     def save(self, directory: Path | str) -> None:
         directory = Path(directory)

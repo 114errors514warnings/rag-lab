@@ -74,3 +74,62 @@ def chunk_documents(docs: list[Document], size: int = 400, overlap: int = 80) ->
     for doc in docs:
         out.extend(chunk_document(doc, size=size, overlap=overlap))
     return out
+
+
+def chunk_hierarchical(doc: Document, parent_size: int = 1600, child_size: int = 400,
+                        overlap: int = 80) -> tuple[list[Chunk], list[Chunk]]:
+    """层级切块（阶段二 Parent-Child）：返回 (父块, 子块)。
+
+    - 父块：较大窗口，作为生成上下文。
+    - 子块：在父块内部再切，``meta['parent_id']`` 指回父块 ``chunk_id``。
+    - id 稳定且不与定长切块冲突：``{doc_id}:P{seq:04d}`` / ``{doc_id}:P{seq:04d}:C{seq:03d}``。
+    """
+    from .metadata import build_chunk_meta
+
+    text = doc.text or ""
+    parents: list[Chunk] = []
+    children: list[Chunk] = []
+    pseq = 0
+    start = 0
+    while start < len(text):
+        end = _pick_end(text, start, parent_size)
+        piece = text[start:end]
+        if piece.strip():
+            parent_id = f"{doc.doc_id}:P{pseq:04d}"
+            parents.append(Chunk(
+                chunk_id=parent_id, doc_id=doc.doc_id, text=piece.strip(),
+                meta=build_chunk_meta(doc, text, start, end, pseq, kind="parent"),
+            ))
+            cseq = 0
+            cstart = start
+            while cstart < end:
+                cend = _pick_end(text, cstart, child_size)
+                cend = min(cend, end)
+                cpiece = text[cstart:cend]
+                if cpiece.strip():
+                    children.append(Chunk(
+                        chunk_id=f"{parent_id}:C{cseq:03d}", doc_id=doc.doc_id, text=cpiece.strip(),
+                        meta=build_chunk_meta(doc, text, cstart, cend, cseq,
+                                              kind="child", parent_id=parent_id),
+                    ))
+                    cseq += 1
+                if cend >= end:
+                    break
+                cstart = max(cend - overlap, cstart + 1)
+            pseq += 1
+        if end >= len(text):
+            break
+        start = max(end - overlap, start + 1)
+    return parents, children
+
+
+def chunk_hierarchical_documents(docs: list[Document], parent_size: int = 1600,
+                                 child_size: int = 400, overlap: int = 80,
+                                 ) -> tuple[list[Chunk], list[Chunk]]:
+    parents: list[Chunk] = []
+    children: list[Chunk] = []
+    for doc in docs:
+        p, c = chunk_hierarchical(doc, parent_size=parent_size, child_size=child_size, overlap=overlap)
+        parents.extend(p)
+        children.extend(c)
+    return parents, children

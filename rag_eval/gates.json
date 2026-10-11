@@ -34,11 +34,11 @@
       "note": "上下文门禁：引用精度不得下降，同时上下文 token 受预算约束"
     },
     "S5": {
-      "suites": [],
+      "suites": ["code_v1"],
       "k": 10,
       "primary": { "recall@10": { "min_delta": 0.0 } },
       "guardrails": { "leakage_rate": { "max": 0.0 } },
-      "note": "需先编写 code_v1 套件（question -> expected_symbols + project_id）"
+      "note": "Code RAG：符号级召回（先建 code_v1 套件）；跨项目混入率必须为 0"
     },
     "S6": {
       "suites": ["smoke_v1", "retrieval_v1"],

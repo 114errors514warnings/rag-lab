@@ -19,10 +19,37 @@ REGISTRY: dict[str, object] = {
 
 def _register_real_systems() -> None:
     try:
-        from rag_engine.eval_adapter import MyPipeline
+        from rag_engine.eval_adapter import (
+            DemoDensePipeline, DemoHybridPipeline, MyHybridPipeline, MyPipeline,
+        )
     except Exception:  # noqa: BLE001 - 真实系统缺失不应影响桩系统
         return
     REGISTRY["my_pipeline"] = MyPipeline
+    REGISTRY["my_pipeline_hybrid"] = MyHybridPipeline
+    REGISTRY["demo_dense"] = DemoDensePipeline
+    REGISTRY["demo_hybrid"] = DemoHybridPipeline
+    try:
+        from rag_engine.eval_demo import DemoMultiPipeline, DemoRerankPipeline
+        REGISTRY["demo_rerank"] = DemoRerankPipeline
+        REGISTRY["demo_multi"] = DemoMultiPipeline
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        from rag_engine.eval_demo import DemoContextPipeline
+        REGISTRY["demo_context"] = DemoContextPipeline
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        from rag_engine.eval_code import CodeRagHybridPipeline, CodeRagPipeline
+        REGISTRY["code_rag"] = CodeRagPipeline
+        REGISTRY["code_rag_hybrid"] = CodeRagHybridPipeline
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        from rag_engine.eval_http import HttpPipeline
+        REGISTRY["http_pipeline"] = HttpPipeline
+    except Exception:  # noqa: BLE001
+        pass
 
 
 _register_real_systems()

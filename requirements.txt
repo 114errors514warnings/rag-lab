@@ -2,8 +2,13 @@
 pydantic>=2
 numpy>=1.24
 
+# 阶段七 服务化
+fastapi>=0.115
+uvicorn>=0.30
+
 # 开发/测试
 pytest>=8
+httpx>=0.28
 
 # 可选后端（未安装也能跑离线默认链路）
 # chromadb        # 向量库可选后端（替代 numpy）

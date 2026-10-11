@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0d7b0d60-2c2d-4a5c-b598-aee4c8261de1",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\MY\\MY\\My Project\\rag-lab\\.archify\\architecture-s2-index-20261011-040000\\candidate.json",
+  "output": "C:\\MY\\MY\\My Project\\rag-lab\\.archify\\architecture-s2-index-20261011-040000\\s2-index-architecture.html",
+  "specification": {
+    "sha256": "58c4e67304681a8281a3095505388b3c58db9de845ef9156d58df8b20fa1ba5f",
+    "bytes": 2463
+  },
+  "artifact": {
+    "sha256": "30e7426241188793df76718c63919b282ef14e8b9c4ce95bfcb0c9637ae9341e",
+    "bytes": 752072
+  }
+}

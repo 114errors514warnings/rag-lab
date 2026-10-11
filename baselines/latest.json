@@ -1,266 +1,304 @@
 {
-  "stage": "S1",
-  "system": "rag_engine(hashing-tfidf + dense + extractive)",
-  "system_config_hash": "fc3a4c805df7",
-  "eval_version": "v1",
-  "generated_at": "2026-10-08T16:33:43+08:00",
-  "git_commit": null,
+  "stage": "S5",
+  "system": "rag_engine(code corpus: AST symbols + dense)",
+  "system_config_hash": "55cdea1b4113-code",
+  "eval_version": "v2",
+  "generated_at": "2026-10-11T12:31:05+08:00",
+  "git_commit": "cadf095",
   "suites": {
-    "smoke_v1": {
-      "suite": "smoke_v1",
-      "sha256": "486dcb20f64c96cb",
+    "code_v1": {
+      "suite": "code_v1",
+      "sha256": "f3f1e887ea4fe990",
       "n_cases": 10,
-      "n_cases_with_labels": 0,
-      "k": 3,
+      "n_cases_with_labels": 10,
+      "k": 10,
       "metrics": {
         "cases": 10.0,
         "success_rate": 1.0,
         "error_rate": 0.0,
-        "recall@3": 0.0,
-        "precision@3": 0.0,
-        "mrr": 0.0,
-        "hit@1": 0.0,
-        "citation_precision": 0.0,
-        "citation_missing_rate": 0.0,
+        "recall@10": 0.6,
+        "precision@10": 0.1667,
+        "mrr": 0.55,
+        "hit@1": 0.5,
+        "citation_precision": 0.1852,
+        "citation_missing_rate": 0.1,
         "leakage_rate": 0.0,
-        "avg_latency_ms": 0.266,
-        "p50_latency_ms": 0.243,
-        "p95_latency_ms": 0.391,
-        "avg_prompt_tokens": 452.7,
+        "avg_latency_ms": 0.116,
+        "p50_latency_ms": 0.116,
+        "p95_latency_ms": 0.164,
+        "avg_prompt_tokens": 111.2,
         "cost_per_query_usd": 0.0,
-        "total_cost_usd": 0.0
+        "total_cost_usd": 0.0,
+        "recall@10[dev]": 0.75,
+        "recall@10[holdout]": 0.0
       },
       "per_case": [
         {
-          "case_id": "s01",
+          "case_id": "code01",
           "split": "dev",
-          "question": "RAG 的流程包含哪些步骤？",
+          "question": "分页参数是在哪个函数校验的？",
           "retrieved": [
-            "readme-md-8ec9a0:0000",
-            "implementation-plan-md-3ac0d9:0033",
-            "implementation-plan-md-3ac0d9:0029"
+            "proj-alpha:utils.py:validate_page",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-alpha:utils.py:validate_page"
+          ],
           "citations": [
-            "readme-md-8ec9a0:0000",
-            "implementation-plan-md-3ac0d9:0033",
-            "implementation-plan-md-3ac0d9:0029"
+            "proj-alpha:utils.py:validate_page",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery"
           ],
-          "latency_ms": 0.463,
+          "latency_ms": 0.186,
           "cost_usd": 0.0,
-          "prompt_tokens": 385,
+          "prompt_tokens": 107,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.3333,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s02",
+          "case_id": "code02",
           "split": "dev",
-          "question": "什么是稀疏检索？",
+          "question": "把列表分页的函数叫什么？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0000",
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0012"
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-alpha:utils.py:paginate"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0000",
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0012"
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "latency_ms": 0.302,
+          "latency_ms": 0.124,
           "cost_usd": 0.0,
-          "prompt_tokens": 491,
+          "prompt_tokens": 105,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s03",
+          "case_id": "code03",
           "split": "dev",
-          "question": "为什么要做切块？",
+          "question": "PageQuery 模型怎么自校验分页参数？",
           "retrieved": [
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0000",
-            "readme-md-8ec9a0:0001"
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery.validate"
+          ],
           "citations": [
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0000",
-            "readme-md-8ec9a0:0001"
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "latency_ms": 0.276,
+          "latency_ms": 0.109,
           "cost_usd": 0.0,
-          "prompt_tokens": 504,
+          "prompt_tokens": 106,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.3333,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s04",
-          "split": "dev",
-          "question": "重排的作用是什么？",
+          "case_id": "code04",
+          "split": "holdout",
+          "question": "PageQuery 的构造函数做了什么？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0012",
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0000"
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery.__init__"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0012",
-            "stage-gates-md-7f6b4d:0000",
-            "implementation-plan-md-3ac0d9:0000"
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
           ],
-          "latency_ms": 0.247,
+          "latency_ms": 0.088,
           "cost_usd": 0.0,
-          "prompt_tokens": 492,
+          "prompt_tokens": 79,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s05",
+          "case_id": "code05",
           "split": "dev",
-          "question": "怎么控制上下文成本？",
-          "retrieved": [
-            "implementation-plan-md-3ac0d9:0000",
-            "implementation-plan-md-3ac0d9:0046",
-            "rag-md-896a8e:0004"
+          "question": "PageQuery 类定义在哪个文件？",
+          "retrieved": [],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery"
           ],
-          "relevant": [],
-          "citations": [
-            "implementation-plan-md-3ac0d9:0000",
-            "implementation-plan-md-3ac0d9:0046",
-            "rag-md-896a8e:0004"
-          ],
-          "latency_ms": 0.251,
+          "citations": [],
+          "latency_ms": 0.055,
           "cost_usd": 0.0,
-          "prompt_tokens": 544,
+          "prompt_tokens": 9,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 0.0
         },
         {
-          "case_id": "s06",
+          "case_id": "code06",
           "split": "dev",
-          "question": "增量索引有什么好处？",
+          "question": "请求处理信封是在哪个函数里构造的？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0002",
-            "implementation-plan-md-3ac0d9:0006",
-            "implementation-plan-md-3ac0d9:0013"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:parse_query"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-beta:handlers.py:handle_request"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0002",
-            "implementation-plan-md-3ac0d9:0006",
-            "implementation-plan-md-3ac0d9:0013"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:parse_query"
           ],
-          "latency_ms": 0.215,
+          "latency_ms": 0.134,
           "cost_usd": 0.0,
-          "prompt_tokens": 326,
+          "prompt_tokens": 151,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s07",
+          "case_id": "code07",
           "split": "dev",
-          "question": "多项目隔离怎么实现？",
+          "question": "k=v 查询串的解析在哪个函数？",
           "retrieved": [
-            "stage-gates-md-7f6b4d:0010",
-            "implementation-plan-md-3ac0d9:0000",
-            "readme-md-8ec9a0:0001"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-beta:handlers.py:parse_query"
+          ],
           "citations": [
-            "stage-gates-md-7f6b4d:0010",
-            "implementation-plan-md-3ac0d9:0000",
-            "readme-md-8ec9a0:0001"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router"
           ],
-          "latency_ms": 0.239,
+          "latency_ms": 0.137,
           "cost_usd": 0.0,
-          "prompt_tokens": 498,
+          "prompt_tokens": 148,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s08",
+          "case_id": "code08",
           "split": "dev",
-          "question": "Code RAG 用什么解析代码？",
+          "question": "Router 怎么样按路径查找处理函数？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0012",
-            "stage-gates-md-7f6b4d:0000",
-            "rag-md-896a8e:0004"
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-beta:handlers.py:Router.dispatch"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0012",
-            "stage-gates-md-7f6b4d:0000",
-            "rag-md-896a8e:0004"
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query"
           ],
-          "latency_ms": 0.221,
+          "latency_ms": 0.133,
           "cost_usd": 0.0,
-          "prompt_tokens": 446,
+          "prompt_tokens": 148,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s09",
-          "split": "dev",
-          "question": "父块检索是什么？",
+          "case_id": "code09",
+          "split": "holdout",
+          "question": "Router 注册路由的方法叫什么？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0012",
-            "implementation-plan-md-3ac0d9:0000",
-            "stage-gates-md-7f6b4d:0000"
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:handle_request"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-beta:handlers.py:Router.register"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0012",
-            "implementation-plan-md-3ac0d9:0000",
-            "stage-gates-md-7f6b4d:0000"
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:handle_request"
           ],
-          "latency_ms": 0.225,
+          "latency_ms": 0.089,
           "cost_usd": 0.0,
-          "prompt_tokens": 491,
+          "prompt_tokens": 109,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
         },
         {
-          "case_id": "s10",
+          "case_id": "code10",
           "split": "dev",
-          "question": "哪两种检索可以混合使用？",
+          "question": "handle_request 内部调用了哪个查询串解析函数？",
           "retrieved": [
-            "implementation-plan-md-3ac0d9:0029",
-            "stage-gates-md-7f6b4d:0010",
-            "implementation-plan-md-3ac0d9:0013"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router"
           ],
-          "relevant": [],
+          "relevant": [
+            "proj-beta:handlers.py:handle_request"
+          ],
           "citations": [
-            "implementation-plan-md-3ac0d9:0029",
-            "stage-gates-md-7f6b4d:0010",
-            "implementation-plan-md-3ac0d9:0013"
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router"
           ],
-          "latency_ms": 0.217,
+          "latency_ms": 0.104,
           "cost_usd": 0.0,
-          "prompt_tokens": 350,
+          "prompt_tokens": 150,
           "error": null,
-          "citation_precision": 0.0
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
         }
       ]
     }
   },
   "findings": [
     {
-      "suite": "smoke_v1",
-      "metric": "citation_missing_rate",
+      "suite": "code_v1",
+      "metric": "recall@10",
       "role": "primary",
       "baseline": null,
-      "current": 0.0,
+      "current": 0.6,
       "delta": null,
       "rule": {
-        "max": 0.2
+        "min_delta": 0.0
       },
-      "verdict": "PASS",
-      "note": "（无 baseline，仅按绝对上限判定）"
+      "verdict": "BASELINE",
+      "note": "缺少 baseline，无法判定增量"
     },
     {
-      "suite": "smoke_v1",
-      "metric": "error_rate",
+      "suite": "code_v1",
+      "metric": "leakage_rate",
       "role": "guardrail",
       "baseline": null,
       "current": 0.0,

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "rag-lab · S2 文档处理与增量索引架构",
+    "subtitle": "清洗去重 · 元数据 · 切块 · 增量索引",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-s2-index-20261011-040000/s2-index-architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "loader", "type": "backend", "label": "文档加载", "sublabel": "loader / load_tree", "pos": [40, 120], "size": [130, 60] },
+    { "id": "clean", "type": "backend", "label": "清洗去重", "sublabel": "content_hash", "pos": [220, 120], "size": [130, 60] },
+    { "id": "metadata", "type": "backend", "label": "元数据", "sublabel": "source / section / position", "pos": [400, 120], "size": [140, 60] },
+    { "id": "chunker", "type": "backend", "label": "切块", "sublabel": "定长 / 层级", "pos": [590, 120], "size": [140, 60] },
+    { "id": "indexer", "type": "backend", "label": "增量索引", "sublabel": "doc_id diff", "pos": [780, 120], "size": [140, 60] },
+    { "id": "store", "type": "database", "label": "向量库", "sublabel": "vectors + chunks", "pos": [995, 120], "size": [140, 60] }
+  ],
+  "connections": [
+    { "id": "loader-clean", "from": "loader", "to": "clean", "label": "解析", "variant": "emphasis" },
+    { "id": "clean-metadata", "from": "clean", "to": "metadata", "label": "清洗" },
+    { "id": "metadata-chunker", "from": "metadata", "to": "chunker", "label": "元数据" },
+    { "id": "chunker-indexer", "from": "chunker", "to": "indexer", "label": "切块" },
+    { "id": "indexer-store", "from": "indexer", "to": "store", "label": "增量写入" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "增量索引", "items": ["以 doc_id 为单位 diff（{mtime, content_hash}）", "仅对 added/changed 重算，按 doc_id 删除旧切片", "其余 chunk 与向量逐字节不变（L1 硬断言）"] },
+    { "dot": "emerald", "title": "元数据与过滤", "items": ["source / section / position / updated_at / project_id / trust", "过滤前置：先过滤再取 Top-K，避免候选不足"] },
+    { "dot": "rose", "title": "Parent-Child", "items": ["小块检索、返回所属父块作为生成上下文", "答案可回溯到 source + position"] },
+    { "dot": "amber", "title": "验收（S2）", "items": ["L1：test_incremental_index / test_metadata_filter", "L2：error_rate = 0，citation_missing_rate 不退化"] }
+  ]
+}

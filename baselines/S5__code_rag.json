@@ -1,0 +1,313 @@
+{
+  "stage": "S5",
+  "system": "rag_engine(code corpus: AST symbols + dense)",
+  "system_config_hash": "55cdea1b4113-code",
+  "eval_version": "v2",
+  "generated_at": "2026-10-11T12:31:05+08:00",
+  "git_commit": "cadf095",
+  "suites": {
+    "code_v1": {
+      "suite": "code_v1",
+      "sha256": "f3f1e887ea4fe990",
+      "n_cases": 10,
+      "n_cases_with_labels": 10,
+      "k": 10,
+      "metrics": {
+        "cases": 10.0,
+        "success_rate": 1.0,
+        "error_rate": 0.0,
+        "recall@10": 0.6,
+        "precision@10": 0.1667,
+        "mrr": 0.55,
+        "hit@1": 0.5,
+        "citation_precision": 0.1852,
+        "citation_missing_rate": 0.1,
+        "leakage_rate": 0.0,
+        "avg_latency_ms": 0.116,
+        "p50_latency_ms": 0.116,
+        "p95_latency_ms": 0.164,
+        "avg_prompt_tokens": 111.2,
+        "cost_per_query_usd": 0.0,
+        "total_cost_usd": 0.0,
+        "recall@10[dev]": 0.75,
+        "recall@10[holdout]": 0.0
+      },
+      "per_case": [
+        {
+          "case_id": "code01",
+          "split": "dev",
+          "question": "分页参数是在哪个函数校验的？",
+          "retrieved": [
+            "proj-alpha:utils.py:validate_page",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery"
+          ],
+          "relevant": [
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "citations": [
+            "proj-alpha:utils.py:validate_page",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery"
+          ],
+          "latency_ms": 0.186,
+          "cost_usd": 0.0,
+          "prompt_tokens": 107,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.3333,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code02",
+          "split": "dev",
+          "question": "把列表分页的函数叫什么？",
+          "retrieved": [
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "relevant": [
+            "proj-alpha:utils.py:paginate"
+          ],
+          "citations": [
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "latency_ms": 0.124,
+          "cost_usd": 0.0,
+          "prompt_tokens": 105,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code03",
+          "split": "dev",
+          "question": "PageQuery 模型怎么自校验分页参数？",
+          "retrieved": [
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery.validate"
+          ],
+          "citations": [
+            "proj-alpha:models.py:PageQuery.validate",
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "latency_ms": 0.109,
+          "cost_usd": 0.0,
+          "prompt_tokens": 106,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.3333,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code04",
+          "split": "holdout",
+          "question": "PageQuery 的构造函数做了什么？",
+          "retrieved": [
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery.__init__"
+          ],
+          "citations": [
+            "proj-alpha:models.py:PageQuery",
+            "proj-alpha:utils.py:validate_page"
+          ],
+          "latency_ms": 0.088,
+          "cost_usd": 0.0,
+          "prompt_tokens": 79,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code05",
+          "split": "dev",
+          "question": "PageQuery 类定义在哪个文件？",
+          "retrieved": [],
+          "relevant": [
+            "proj-alpha:models.py:PageQuery"
+          ],
+          "citations": [],
+          "latency_ms": 0.055,
+          "cost_usd": 0.0,
+          "prompt_tokens": 9,
+          "error": null,
+          "recall@k": 0.0
+        },
+        {
+          "case_id": "code06",
+          "split": "dev",
+          "question": "请求处理信封是在哪个函数里构造的？",
+          "retrieved": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:parse_query"
+          ],
+          "relevant": [
+            "proj-beta:handlers.py:handle_request"
+          ],
+          "citations": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:parse_query"
+          ],
+          "latency_ms": 0.134,
+          "cost_usd": 0.0,
+          "prompt_tokens": 151,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code07",
+          "split": "dev",
+          "question": "k=v 查询串的解析在哪个函数？",
+          "retrieved": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router"
+          ],
+          "relevant": [
+            "proj-beta:handlers.py:parse_query"
+          ],
+          "citations": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router"
+          ],
+          "latency_ms": 0.137,
+          "cost_usd": 0.0,
+          "prompt_tokens": 148,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code08",
+          "split": "dev",
+          "question": "Router 怎么样按路径查找处理函数？",
+          "retrieved": [
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query"
+          ],
+          "relevant": [
+            "proj-beta:handlers.py:Router.dispatch"
+          ],
+          "citations": [
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:parse_query"
+          ],
+          "latency_ms": 0.133,
+          "cost_usd": 0.0,
+          "prompt_tokens": 148,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code09",
+          "split": "holdout",
+          "question": "Router 注册路由的方法叫什么？",
+          "retrieved": [
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:handle_request"
+          ],
+          "relevant": [
+            "proj-beta:handlers.py:Router.register"
+          ],
+          "citations": [
+            "proj-beta:handlers.py:Router",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:handle_request"
+          ],
+          "latency_ms": 0.089,
+          "cost_usd": 0.0,
+          "prompt_tokens": 109,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0,
+          "leakage_rate": 0.0
+        },
+        {
+          "case_id": "code10",
+          "split": "dev",
+          "question": "handle_request 内部调用了哪个查询串解析函数？",
+          "retrieved": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router"
+          ],
+          "relevant": [
+            "proj-beta:handlers.py:handle_request"
+          ],
+          "citations": [
+            "proj-beta:handlers.py:handle_request",
+            "proj-beta:handlers.py:Router.dispatch",
+            "proj-beta:handlers.py:parse_query",
+            "proj-beta:handlers.py:Router"
+          ],
+          "latency_ms": 0.104,
+          "cost_usd": 0.0,
+          "prompt_tokens": 150,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.25,
+          "leakage_rate": 0.0
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "suite": "code_v1",
+      "metric": "recall@10",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.6,
+      "delta": null,
+      "rule": {
+        "min_delta": 0.0
+      },
+      "verdict": "BASELINE",
+      "note": "缺少 baseline，无法判定增量"
+    },
+    {
+      "suite": "code_v1",
+      "metric": "leakage_rate",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.0
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    }
+  ]
+}

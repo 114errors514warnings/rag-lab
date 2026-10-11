@@ -1,0 +1,574 @@
+{
+  "stage": "S3",
+  "system": "rag_engine(hashing-tfidf + dense + extractive)",
+  "system_config_hash": "55cdea1b4113",
+  "eval_version": "v2",
+  "generated_at": "2026-10-11T02:21:35+08:00",
+  "git_commit": "cadf095",
+  "suites": {
+    "retrieval_v1": {
+      "suite": "retrieval_v1",
+      "sha256": "8392a9ec82f64755",
+      "n_cases": 20,
+      "n_cases_with_labels": 20,
+      "k": 3,
+      "metrics": {
+        "cases": 20.0,
+        "success_rate": 1.0,
+        "error_rate": 0.0,
+        "recall@3": 0.0,
+        "precision@3": 0.0,
+        "mrr": 0.0,
+        "hit@1": 0.0,
+        "citation_precision": 0.0,
+        "citation_missing_rate": 0.0,
+        "leakage_rate": 0.0,
+        "avg_latency_ms": 0.17,
+        "p50_latency_ms": 0.162,
+        "p95_latency_ms": 0.209,
+        "avg_prompt_tokens": 482.95,
+        "cost_per_query_usd": 0.0,
+        "total_cost_usd": 0.0,
+        "recall@3[dev]": 0.0,
+        "recall@3[holdout]": 0.0
+      },
+      "per_case": [
+        {
+          "case_id": "q01",
+          "split": "dev",
+          "question": "BM25 是什么类型的检索算法？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "relevant": [
+            "c03"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "latency_ms": 0.253,
+          "cost_usd": 0.0,
+          "prompt_tokens": 495,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q02",
+          "split": "dev",
+          "question": "两路检索结果怎么合并？",
+          "retrieved": [
+            "readme-md-8ec9a0:0001",
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0001"
+          ],
+          "relevant": [
+            "c05",
+            "c06"
+          ],
+          "citations": [
+            "readme-md-8ec9a0:0001",
+            "stage-gates-md-7f6b4d:0010",
+            "implementation-plan-md-3ac0d9:0001"
+          ],
+          "latency_ms": 0.178,
+          "cost_usd": 0.0,
+          "prompt_tokens": 478,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q03",
+          "split": "dev",
+          "question": "重排的开销太大怎么办？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "readme-md-8ec9a0:0003"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "readme-md-8ec9a0:0003"
+          ],
+          "latency_ms": 0.162,
+          "cost_usd": 0.0,
+          "prompt_tokens": 463,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q04",
+          "split": "dev",
+          "question": "上下文太长怎么控制？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "rag-md-896a8e:0004"
+          ],
+          "relevant": [
+            "c08"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "rag-md-896a8e:0004"
+          ],
+          "latency_ms": 0.161,
+          "cost_usd": 0.0,
+          "prompt_tokens": 535,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q05",
+          "split": "dev",
+          "question": "怎么保证检索到的内容不会串到别的项目？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0001",
+            "implementation-plan-md-3ac0d9:0021",
+            "rag-md-896a8e:0005"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0001",
+            "implementation-plan-md-3ac0d9:0021",
+            "rag-md-896a8e:0005"
+          ],
+          "latency_ms": 0.186,
+          "cost_usd": 0.0,
+          "prompt_tokens": 559,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q06",
+          "split": "dev",
+          "question": "代码库怎么做检索？",
+          "retrieved": [
+            "rag-md-896a8e:0004",
+            "implementation-plan-md-3ac0d9:0012",
+            "rag-md-896a8e:0005"
+          ],
+          "relevant": [
+            "c11"
+          ],
+          "citations": [
+            "rag-md-896a8e:0004",
+            "implementation-plan-md-3ac0d9:0012",
+            "rag-md-896a8e:0005"
+          ],
+          "latency_ms": 0.155,
+          "cost_usd": 0.0,
+          "prompt_tokens": 506,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q07",
+          "split": "dev",
+          "question": "分块会不会破坏语义？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0020",
+            "implementation-plan-md-3ac0d9:0006",
+            "implementation-plan-md-3ac0d9:0028"
+          ],
+          "relevant": [
+            "c02"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0020",
+            "implementation-plan-md-3ac0d9:0006",
+            "implementation-plan-md-3ac0d9:0028"
+          ],
+          "latency_ms": 0.129,
+          "cost_usd": 0.0,
+          "prompt_tokens": 276,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q08",
+          "split": "dev",
+          "question": "每次改一个文档都要重新建整个索引吗？",
+          "retrieved": [
+            "rag-md-896a8e:0003",
+            "stage-gates-md-7f6b4d:0017",
+            "rag-md-896a8e:0006"
+          ],
+          "relevant": [
+            "c10"
+          ],
+          "citations": [
+            "rag-md-896a8e:0003",
+            "stage-gates-md-7f6b4d:0017",
+            "rag-md-896a8e:0006"
+          ],
+          "latency_ms": 0.201,
+          "cost_usd": 0.0,
+          "prompt_tokens": 598,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q09",
+          "split": "dev",
+          "question": "先用小块找、再用大块喂给模型的做法叫什么？",
+          "retrieved": [
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "relevant": [
+            "c09"
+          ],
+          "citations": [
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "latency_ms": 0.207,
+          "cost_usd": 0.0,
+          "prompt_tokens": 516,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q10",
+          "split": "dev",
+          "question": "Dense Retrieval 的原理是什么？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0001"
+          ],
+          "relevant": [
+            "c04"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0012",
+            "implementation-plan-md-3ac0d9:0000",
+            "stage-gates-md-7f6b4d:0001"
+          ],
+          "latency_ms": 0.177,
+          "cost_usd": 0.0,
+          "prompt_tokens": 579,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q11",
+          "split": "dev",
+          "question": "RAG 的基本步骤有哪些？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0015",
+            "stage-gates-md-7f6b4d:0016",
+            "implementation-plan-md-3ac0d9:0035"
+          ],
+          "relevant": [
+            "c01"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0015",
+            "stage-gates-md-7f6b4d:0016",
+            "implementation-plan-md-3ac0d9:0035"
+          ],
+          "latency_ms": 0.162,
+          "cost_usd": 0.0,
+          "prompt_tokens": 487,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q12",
+          "split": "dev",
+          "question": "多路排名怎么融合？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0010",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0000"
+          ],
+          "relevant": [
+            "c06"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0010",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0000"
+          ],
+          "latency_ms": 0.155,
+          "cost_usd": 0.0,
+          "prompt_tokens": 497,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q13",
+          "split": "holdout",
+          "question": "精排模型为什么精度高但慢？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0000",
+            "stage-gates-md-7f6b4d:0001",
+            "implementation-plan-md-3ac0d9:0012"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0000",
+            "stage-gates-md-7f6b4d:0001",
+            "implementation-plan-md-3ac0d9:0012"
+          ],
+          "latency_ms": 0.173,
+          "cost_usd": 0.0,
+          "prompt_tokens": 507,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q14",
+          "split": "holdout",
+          "question": "怎么防止跨项目越权检索？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0003",
+            "implementation-plan-md-3ac0d9:0029",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0003",
+            "implementation-plan-md-3ac0d9:0029",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "latency_ms": 0.159,
+          "cost_usd": 0.0,
+          "prompt_tokens": 476,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q15",
+          "split": "dev",
+          "question": "精排环节太慢，怎么省时间？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0005"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0005"
+          ],
+          "latency_ms": 0.152,
+          "cost_usd": 0.0,
+          "prompt_tokens": 437,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q16",
+          "split": "dev",
+          "question": "怎么避免答案里混进其它仓库的内容？",
+          "retrieved": [
+            "rag-md-896a8e:0005",
+            "implementation-plan-md-3ac0d9:0030",
+            "stage-gates-md-7f6b4d:0020"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "rag-md-896a8e:0005",
+            "implementation-plan-md-3ac0d9:0030",
+            "stage-gates-md-7f6b4d:0020"
+          ],
+          "latency_ms": 0.162,
+          "cost_usd": 0.0,
+          "prompt_tokens": 448,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q17",
+          "split": "dev",
+          "question": "长回答要怎么压缩才省钱？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "implementation-plan-md-3ac0d9:0007",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "relevant": [
+            "c08"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "implementation-plan-md-3ac0d9:0007",
+            "stage-gates-md-7f6b4d:0000"
+          ],
+          "latency_ms": 0.147,
+          "cost_usd": 0.0,
+          "prompt_tokens": 432,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q18",
+          "split": "dev",
+          "question": "代码里怎么找某个方法的定义？",
+          "retrieved": [
+            "stage-gates-md-7f6b4d:0000",
+            "stage-gates-md-7f6b4d:0001",
+            "proj-auth-errors-py-4f79dd:0000"
+          ],
+          "relevant": [
+            "c11"
+          ],
+          "citations": [
+            "stage-gates-md-7f6b4d:0000",
+            "stage-gates-md-7f6b4d:0001",
+            "proj-auth-errors-py-4f79dd:0000"
+          ],
+          "latency_ms": 0.157,
+          "cost_usd": 0.0,
+          "prompt_tokens": 438,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q19",
+          "split": "dev",
+          "question": "改了文件以后要重建多少东西？",
+          "retrieved": [
+            "rag-md-896a8e:0003",
+            "stage-gates-md-7f6b4d:0015",
+            "implementation-plan-md-3ac0d9:0010"
+          ],
+          "relevant": [
+            "c10"
+          ],
+          "citations": [
+            "rag-md-896a8e:0003",
+            "stage-gates-md-7f6b4d:0015",
+            "implementation-plan-md-3ac0d9:0010"
+          ],
+          "latency_ms": 0.152,
+          "cost_usd": 0.0,
+          "prompt_tokens": 399,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q20",
+          "split": "holdout",
+          "question": "两路召回的分数不在同一量纲怎么办？",
+          "retrieved": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0044"
+          ],
+          "relevant": [
+            "c06"
+          ],
+          "citations": [
+            "implementation-plan-md-3ac0d9:0000",
+            "readme-md-8ec9a0:0001",
+            "implementation-plan-md-3ac0d9:0044"
+          ],
+          "latency_ms": 0.173,
+          "cost_usd": 0.0,
+          "prompt_tokens": 533,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "suite": "retrieval_v1",
+      "metric": "mrr",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "min_delta": 0.1
+      },
+      "verdict": "BASELINE",
+      "note": "缺少 baseline，无法判定增量"
+    },
+    {
+      "suite": "retrieval_v1",
+      "metric": "recall@3",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "min_delta": 0.05
+      },
+      "verdict": "BASELINE",
+      "note": "缺少 baseline，无法判定增量"
+    },
+    {
+      "suite": "retrieval_v1",
+      "metric": "p95_latency_ms",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 0.209,
+      "delta": null,
+      "rule": {
+        "max": 500.0
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    },
+    {
+      "suite": "retrieval_v1",
+      "metric": "cost_per_query_usd",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 0.0,
+      "delta": null,
+      "rule": {
+        "max": 0.005
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    }
+  ]
+}

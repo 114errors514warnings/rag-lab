@@ -1,0 +1,23 @@
+# rag-lab · 一键运行与评测
+#   docker compose up --build           # 启动知识服务 → http://127.0.0.1:8099/health
+#   docker compose run --rm gates       # L1 + L2 回归门禁（退出码即 CI）
+services:
+  app:
+    build: .
+    image: rag-lab:latest
+    container_name: rag-lab
+    ports:
+      - "8099:8099"
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    restart: unless-stopped
+
+  gates:
+    build: .
+    image: rag-lab:latest
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    command: ["python", "-m", "pytest", "-q"]
+    profiles: ["gates"]

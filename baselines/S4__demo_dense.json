@@ -1,0 +1,628 @@
+{
+  "stage": "S4",
+  "system": "rag_engine(demo corpus: hashing-tfidf dense)",
+  "system_config_hash": "55cdea1b4113",
+  "eval_version": "v2",
+  "generated_at": "2026-10-11T12:28:38+08:00",
+  "git_commit": "cadf095",
+  "suites": {
+    "retrieval_v1": {
+      "suite": "retrieval_v1",
+      "sha256": "8392a9ec82f64755",
+      "n_cases": 20,
+      "n_cases_with_labels": 20,
+      "k": 5,
+      "metrics": {
+        "cases": 20.0,
+        "success_rate": 1.0,
+        "error_rate": 0.0,
+        "recall@5": 0.9,
+        "precision@5": 0.19,
+        "mrr": 0.7542,
+        "hit@1": 0.65,
+        "citation_precision": 0.19,
+        "citation_missing_rate": 0.0,
+        "leakage_rate": 0.0,
+        "avg_latency_ms": 0.096,
+        "p50_latency_ms": 0.096,
+        "p95_latency_ms": 0.113,
+        "avg_prompt_tokens": 260.4,
+        "cost_per_query_usd": 0.0,
+        "total_cost_usd": 0.0,
+        "recall@5[dev]": 0.8824,
+        "recall@5[holdout]": 1.0
+      },
+      "per_case": [
+        {
+          "case_id": "q01",
+          "split": "dev",
+          "question": "BM25 是什么类型的检索算法？",
+          "retrieved": [
+            "c03",
+            "c11",
+            "c13",
+            "c09",
+            "c05"
+          ],
+          "relevant": [
+            "c03"
+          ],
+          "citations": [
+            "c03",
+            "c11",
+            "c13",
+            "c09",
+            "c05"
+          ],
+          "latency_ms": 0.14,
+          "cost_usd": 0.0,
+          "prompt_tokens": 145,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q02",
+          "split": "dev",
+          "question": "两路检索结果怎么合并？",
+          "retrieved": [
+            "c05",
+            "c06",
+            "d07",
+            "c04",
+            "d01"
+          ],
+          "relevant": [
+            "c05",
+            "c06"
+          ],
+          "citations": [
+            "c05",
+            "c06",
+            "d07",
+            "c04",
+            "d01"
+          ],
+          "latency_ms": 0.112,
+          "cost_usd": 0.0,
+          "prompt_tokens": 241,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.4
+        },
+        {
+          "case_id": "q03",
+          "split": "dev",
+          "question": "重排的开销太大怎么办？",
+          "retrieved": [
+            "c07",
+            "c06",
+            "d01",
+            "d04",
+            "c08"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "c07",
+            "c06",
+            "d01",
+            "d04",
+            "c08"
+          ],
+          "latency_ms": 0.095,
+          "cost_usd": 0.0,
+          "prompt_tokens": 249,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q04",
+          "split": "dev",
+          "question": "上下文太长怎么控制？",
+          "retrieved": [
+            "c08",
+            "c09",
+            "d08",
+            "c11",
+            "d01"
+          ],
+          "relevant": [
+            "c08"
+          ],
+          "citations": [
+            "c08",
+            "c09",
+            "d08",
+            "c11",
+            "d01"
+          ],
+          "latency_ms": 0.087,
+          "cost_usd": 0.0,
+          "prompt_tokens": 240,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q05",
+          "split": "dev",
+          "question": "怎么保证检索到的内容不会串到别的项目？",
+          "retrieved": [
+            "c13",
+            "d01",
+            "c12",
+            "d07",
+            "d04"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "c13",
+            "d01",
+            "c12",
+            "d07",
+            "d04"
+          ],
+          "latency_ms": 0.109,
+          "cost_usd": 0.0,
+          "prompt_tokens": 296,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q06",
+          "split": "dev",
+          "question": "代码库怎么做检索？",
+          "retrieved": [
+            "c09",
+            "c11",
+            "c04",
+            "c12",
+            "d01"
+          ],
+          "relevant": [
+            "c11"
+          ],
+          "citations": [
+            "c09",
+            "c11",
+            "c04",
+            "c12",
+            "d01"
+          ],
+          "latency_ms": 0.077,
+          "cost_usd": 0.0,
+          "prompt_tokens": 199,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q07",
+          "split": "dev",
+          "question": "分块会不会破坏语义？",
+          "retrieved": [
+            "c02",
+            "c09",
+            "c01",
+            "d04",
+            "d03"
+          ],
+          "relevant": [
+            "c02"
+          ],
+          "citations": [
+            "c02",
+            "c09",
+            "c01",
+            "d04",
+            "d03"
+          ],
+          "latency_ms": 0.083,
+          "cost_usd": 0.0,
+          "prompt_tokens": 255,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q08",
+          "split": "dev",
+          "question": "每次改一个文档都要重新建整个索引吗？",
+          "retrieved": [
+            "c10",
+            "c11",
+            "d02",
+            "c07",
+            "d08"
+          ],
+          "relevant": [
+            "c10"
+          ],
+          "citations": [
+            "c10",
+            "c11",
+            "d02",
+            "c07",
+            "d08"
+          ],
+          "latency_ms": 0.1,
+          "cost_usd": 0.0,
+          "prompt_tokens": 264,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q09",
+          "split": "dev",
+          "question": "先用小块找、再用大块喂给模型的做法叫什么？",
+          "retrieved": [
+            "c09",
+            "c08",
+            "c04",
+            "d01",
+            "d03"
+          ],
+          "relevant": [
+            "c09"
+          ],
+          "citations": [
+            "c09",
+            "c08",
+            "c04",
+            "d01",
+            "d03"
+          ],
+          "latency_ms": 0.104,
+          "cost_usd": 0.0,
+          "prompt_tokens": 265,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q10",
+          "split": "dev",
+          "question": "Dense Retrieval 的原理是什么？",
+          "retrieved": [
+            "d08",
+            "c09",
+            "d04",
+            "c04",
+            "c03"
+          ],
+          "relevant": [
+            "c04"
+          ],
+          "citations": [
+            "d08",
+            "c09",
+            "d04",
+            "c04",
+            "c03"
+          ],
+          "latency_ms": 0.078,
+          "cost_usd": 0.0,
+          "prompt_tokens": 251,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q11",
+          "split": "dev",
+          "question": "RAG 的基本步骤有哪些？",
+          "retrieved": [
+            "c01",
+            "c04",
+            "c10",
+            "d04",
+            "c02"
+          ],
+          "relevant": [
+            "c01"
+          ],
+          "citations": [
+            "c01",
+            "c04",
+            "c10",
+            "d04",
+            "c02"
+          ],
+          "latency_ms": 0.074,
+          "cost_usd": 0.0,
+          "prompt_tokens": 208,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q12",
+          "split": "dev",
+          "question": "多路排名怎么融合？",
+          "retrieved": [
+            "c06",
+            "c05",
+            "d06",
+            "d03",
+            "d05"
+          ],
+          "relevant": [
+            "c06"
+          ],
+          "citations": [
+            "c06",
+            "c05",
+            "d06",
+            "d03",
+            "d05"
+          ],
+          "latency_ms": 0.085,
+          "cost_usd": 0.0,
+          "prompt_tokens": 292,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q13",
+          "split": "holdout",
+          "question": "精排模型为什么精度高但慢？",
+          "retrieved": [
+            "c07",
+            "c04",
+            "c08",
+            "d03",
+            "c09"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "c07",
+            "c04",
+            "c08",
+            "d03",
+            "c09"
+          ],
+          "latency_ms": 0.081,
+          "cost_usd": 0.0,
+          "prompt_tokens": 212,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q14",
+          "split": "holdout",
+          "question": "怎么防止跨项目越权检索？",
+          "retrieved": [
+            "c13",
+            "c12",
+            "d05",
+            "d01",
+            "d07"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "c13",
+            "c12",
+            "d05",
+            "d01",
+            "d07"
+          ],
+          "latency_ms": 0.09,
+          "cost_usd": 0.0,
+          "prompt_tokens": 285,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q15",
+          "split": "dev",
+          "question": "精排环节太慢，怎么省时间？",
+          "retrieved": [
+            "d06",
+            "c07",
+            "d03",
+            "d01",
+            "d05"
+          ],
+          "relevant": [
+            "c07"
+          ],
+          "citations": [
+            "d06",
+            "c07",
+            "d03",
+            "d01",
+            "d05"
+          ],
+          "latency_ms": 0.111,
+          "cost_usd": 0.0,
+          "prompt_tokens": 348,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q16",
+          "split": "dev",
+          "question": "怎么避免答案里混进其它仓库的内容？",
+          "retrieved": [
+            "d07",
+            "d06",
+            "c05",
+            "d04",
+            "c10"
+          ],
+          "relevant": [
+            "c12"
+          ],
+          "citations": [
+            "d07",
+            "d06",
+            "c05",
+            "d04",
+            "c10"
+          ],
+          "latency_ms": 0.105,
+          "cost_usd": 0.0,
+          "prompt_tokens": 295,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q17",
+          "split": "dev",
+          "question": "长回答要怎么压缩才省钱？",
+          "retrieved": [
+            "c04",
+            "c13",
+            "c02",
+            "d08",
+            "c09"
+          ],
+          "relevant": [
+            "c08"
+          ],
+          "citations": [
+            "c04",
+            "c13",
+            "c02",
+            "d08",
+            "c09"
+          ],
+          "latency_ms": 0.079,
+          "cost_usd": 0.0,
+          "prompt_tokens": 200,
+          "error": null,
+          "recall@k": 0.0,
+          "citation_precision": 0.0
+        },
+        {
+          "case_id": "q18",
+          "split": "dev",
+          "question": "代码里怎么找某个方法的定义？",
+          "retrieved": [
+            "c11",
+            "d07",
+            "d02",
+            "d08",
+            "d01"
+          ],
+          "relevant": [
+            "c11"
+          ],
+          "citations": [
+            "c11",
+            "d07",
+            "d02",
+            "d08",
+            "d01"
+          ],
+          "latency_ms": 0.101,
+          "cost_usd": 0.0,
+          "prompt_tokens": 344,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q19",
+          "split": "dev",
+          "question": "改了文件以后要重建多少东西？",
+          "retrieved": [
+            "c10",
+            "d06",
+            "d02",
+            "d01",
+            "d03"
+          ],
+          "relevant": [
+            "c10"
+          ],
+          "citations": [
+            "c10",
+            "d06",
+            "d02",
+            "d01",
+            "d03"
+          ],
+          "latency_ms": 0.102,
+          "cost_usd": 0.0,
+          "prompt_tokens": 357,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        },
+        {
+          "case_id": "q20",
+          "split": "holdout",
+          "question": "两路召回的分数不在同一量纲怎么办？",
+          "retrieved": [
+            "c06",
+            "c05",
+            "c04",
+            "d05",
+            "d04"
+          ],
+          "relevant": [
+            "c06"
+          ],
+          "citations": [
+            "c06",
+            "c05",
+            "c04",
+            "d05",
+            "d04"
+          ],
+          "latency_ms": 0.097,
+          "cost_usd": 0.0,
+          "prompt_tokens": 262,
+          "error": null,
+          "recall@k": 1.0,
+          "citation_precision": 0.2
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "suite": "retrieval_v1",
+      "metric": "citation_precision",
+      "role": "primary",
+      "baseline": null,
+      "current": 0.19,
+      "delta": null,
+      "rule": {
+        "min_delta": 0.0
+      },
+      "verdict": "BASELINE",
+      "note": "缺少 baseline，无法判定增量"
+    },
+    {
+      "suite": "retrieval_v1",
+      "metric": "avg_prompt_tokens",
+      "role": "guardrail",
+      "baseline": null,
+      "current": 260.4,
+      "delta": null,
+      "rule": {
+        "max": 2000.0
+      },
+      "verdict": "PASS",
+      "note": "（无 baseline，仅按绝对上限判定）"
+    }
+  ]
+}
