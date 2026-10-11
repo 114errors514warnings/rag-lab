@@ -7,6 +7,7 @@
   - S3 报告：`stage-S3-report.md` ｜ S3 架构说明：`stage-S3-architecture.md`
   - E01 报告：`stage-E01-report.md` ｜ E01 架构说明：`stage-E01-architecture.md`（次要阶段，树形文档）
   - E02 报告：`stage-E02-report.md` ｜ E02 架构说明：`stage-E02-architecture.md`（次要阶段，树形文档）
+  - E03 报告：`stage-E03-report.md` ｜ E03 架构说明：`stage-E03-architecture.md`（**未通过**，次要阶段）
 - 阶段架构图（Archify）：
   - S2：`../../.archify/architecture-s2-index-20261011-040000/s2-index-architecture.html`
   - S3：`../../.archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html`
