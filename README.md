@@ -13,8 +13,10 @@
 | **实验平台 · M0** | ✅ `rag_lab/` + `scripts/`（快照 / Golden v2 / Trace / 配置驱动运行器 / 配对 bootstrap） |
 | 评测协议 v2 | ✅ 证据制（`gold_evidence` 行区间/symbol），新增 nDCG、证据覆盖、拒答、宏微平均 |
 | **E00 基线** | ✅ `recall@5=0.8148`、`trace=100%`（详见 `docs/reports/R0/round-0.md`） |
-| L1 功能测试 | ✅ `tests/`（45 项，`python -m pytest`） |
-| M1–M8 / 阶段二~七 | ⬜ 按 `docs/guide/implementation-plan.md` 与实验手册推进 |
+| L1 功能测试 | ✅ `tests/`（77 项，`python -m pytest`） |
+| **系统本体 · 阶段二~七（S2–S7）** | ✅ 已全部达标（S3 经"查询改写+IDF 重排"达标；详见 `docs/reports/R1..R3/`） |
+| 实验线 E01–E12 | ⬜ 仅 E00 基线；按实验手册推进 |
+| **Agent Runtime 线 A01–A10** | ⬜ 规划已归档（`docs/guide/agent-runtime-plan-A01-A10.md`）；综合路线图见 `docs/guide/roadmap-merged.md` |
 
 ## 目录结构
 
@@ -61,11 +63,26 @@ python scripts/run_eval.py --config configs/E0x.yaml --baseline <E00_run_id>
 
 产物：`reports/{run_id}/`（含 `comparison.md` 可直接贴报告）与 `traces/{run_id}.jsonl`。门槛 `FAIL` 时退出码为 `1`。
 
-## 下一步（M1）
+## 三条线与当前进度
 
-> 路线见 `docs/guide/implementation-plan.md`；实验记录见 `docs/reports/R0/round-0.md`。
+```
+RAG 系统线 S1–S7（✅ 已达标） ┐
+RAG 实验线 E00（✅ 基线；E01–E12 ⬜）┴─▶ Project Knowledge Engine（✅ 含 MCP 工具面）
+                                              │
+                                              ▼
+                       Tool Calling / Tool Executor（❌ 本工作区未找到 → A 线前置缺口）
+                                              │
+                                              ▼
+                       Agent Runtime A01–A10（⬜ 0/10，有新计划）
+```
 
-1. **M1 解析与切块**：`ingest/clean.py`、切块模式（token/层级）、代码 AST 符号索引（为 E01–E03）；`configs/E01–E03.yaml`。
-2. **M3 之前**：确定真实 Embedding（本地/API）与 tokenizer，否则 E04 无法真跑 A/B。
-3. **M5 之前**：补拒答与 LLM 裁判（当前 `no_answer_accuracy=0`、`answer_accuracy` 为代理口径）。
-4. 每个实验：改一个主变量 → 跑 L1 → 跑运行器 → 看配对 CI（跨 0 记"证据不足"）→ 写 `round-N.md`。
+- 新计划（A01–A10）：`docs/guide/agent-runtime-plan-A01-A10.md`（原文 `docs/guide/assets/…docx`）
+- 综合路线图（S/E/T/A 合流、现状盘点、里程碑、复用映射、下一步）：`docs/guide/roadmap-merged.md`
+
+## 下一步（M0 · Tool Calling 前置）
+
+> 路线见 `docs/guide/roadmap-merged.md`；记录约定见 `docs/guide/records-convention.md`。
+
+1. **确定承载仓库**：A 线建议目录（`src/runtime/ experiments/a01…a10/`）与 rag-lab 现有布局不同 → 建议新建独立仓库 `agent-runtime`，或作为 rag-lab 子包（见路线图 §7）。
+2. **T01–T03**：`ToolSpec/Executor`（沙箱 / dry-run / 超时 / 审计），并将 rag-lab 的 `search_project/get_symbol/read_context` + `run_test` 接入执行器。
+3. 之后按 A 线 M1（A01–A03）→ M2（A04–A06）→ M3（A07–A09）→ M4（A10）推进，沿用本仓库的三层测试与"每阶段两份文档 + Archify 图"纪律。
