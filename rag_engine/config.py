@@ -1,10 +1,19 @@
-"""引擎配置。``fingerprint()`` 即报告里的 ``config_hash``：配置一改就变。"""
+"""引擎配置。``fingerprint()`` 即报告里的 ``config_hash``：配置一改就变。
+
+**便携性约定（2026-10-11 起）**：``config_hash`` 只覆盖**语义参数**（切块/嵌入/检索/生成），
+**不包含路径类字段**（``index_dir``/``raw_dir``），因此同一份配置在不同机器/目录下得到相同指纹。
+历史记录的 ``config_hash`` 由旧口径（含绝对路径）产生，**不可与新值直接比较**；见
+``docs/reports/R0/round-0.md`` 的「后续变更」。
+"""
 
 from __future__ import annotations
 
 import hashlib
 import json
 from dataclasses import asdict, dataclass, field
+
+#: 不计入指纹的字段：路径随机器/目录变化，与检索语义无关
+NON_SEMANTIC_FIELDS = frozenset({"index_dir", "raw_dir"})
 
 
 @dataclass(frozen=True)
@@ -34,5 +43,6 @@ class EngineConfig:
     reserved: tuple[str, ...] = field(default_factory=tuple)
 
     def fingerprint(self) -> str:
-        payload = json.dumps(asdict(self), sort_keys=True, ensure_ascii=False)
+        data = {k: v for k, v in asdict(self).items() if k not in NON_SEMANTIC_FIELDS}
+        payload = json.dumps(data, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:12]

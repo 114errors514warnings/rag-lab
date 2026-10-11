@@ -196,3 +196,17 @@ python scripts/run_eval.py --config configs/E0x.yaml --baseline <E00_run_id>
 ## 后续变更
 
 （E01 及以后改动系统/平台/指标口径时在此追加，不修改正文。）
+
+### 后续变更 · 2026-10-11 · `config_hash` 改为便携口径
+
+- **触发原因**：本记录 §0 的 `config_hash=e821df85555c` 在新机器/新目录下**无法复现**。
+- **定位**：`EngineConfig.fingerprint()` 原为 `sha256(asdict(config))`，`asdict` 含 **`index_dir` 绝对路径**；
+  `eval_adapter.MyPipeline._ensure()` 会把 `index_dir` 替换为绝对路径，故仓库一换目录/机器，`config_hash` 即变
+  （实测：同一 E00 配置在 `实践项目合集/rag-lab` 得 `d8c850de19d5`、在临时 worktree 得 `01197359d212`，均与记录值不同）。
+  该值只影响 `run_id` 的组成，**不影响任何指标**。
+- **改动（方案 A）**：`rag_engine/config.py` 新增 `NON_SEMANTIC_FIELDS = {"index_dir","raw_dir"}`，
+  `fingerprint()` 只哈希**语义参数**（切块/嵌入/检索/生成），路径不参与。E00 新指纹 = `483d64cf78e9`。
+- **验证**：`pytest` 77 passed；同一配置换任意路径 ⇒ 同指纹（便携 ✅）；改 `chunk_size` ⇒ 指纹变（仍随语义变化 ✅）；
+  `run_eval --config configs/E00.yaml` ⇒ `recall@5=0.8148 / mrr@5=0.7840 / ndcg@5=0.8965`（与冻结值一致）。
+- **兼容性声明**：本记录 §0 的 `e821df85555c` 与所有历史 `config_hash` 由**旧口径（含绝对路径）**产生，
+  **不可与旧值直接比较**；新口径下的等价值为 `483d64cf78e9`。指标口径未变（`EVAL_VERSION` 仍为 `v2`）。
