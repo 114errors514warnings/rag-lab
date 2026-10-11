@@ -13,21 +13,18 @@ from ..schema import Document
 
 
 def normalize_text(text: str) -> str:
+    """格式统一（阶段二）：去 BOM、统一换行。
+
+    **刻意保持行数不变**：不做空行压缩、不 strip、不逐行 rstrip——否则行号整体位移，
+    会使证据制评测（`gold_evidence` 的 file/line 区间）错位，导致 recall 假性下降。
+
+    见 `docs/reports/R1/stage-S2-report.md` 的「后续变更」：本函数在 2026-10-11 由
+    "压缩空行 + 逐行 rstrip" 改为"仅 BOM/换行归一"，以修复 E00 基线不复现问题。
+    """
     if not text:
-        return ""
-    text = text.replace("\ufeff", "").replace("\r\n", "\n").replace("\r", "\n")
-    out: list[str] = []
-    blank = 0
-    for line in text.split("\n"):
-        line = line.rstrip()
-        if not line.strip():
-            blank += 1
-            if blank > 1:
-                continue
-        else:
-            blank = 0
-        out.append(line)
-    return "\n".join(out).strip()
+        return text
+    text = text.replace("\ufeff", "")
+    return text.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def content_hash(text: str) -> str:

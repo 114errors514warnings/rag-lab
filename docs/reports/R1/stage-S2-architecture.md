@@ -57,3 +57,48 @@ fingerprints = 当前
 - 增量更新按**内容指纹**而非 mtime（更稳，避免"touch 未改内容"触发重建）。
 - Parent-Child 的父块目前也进向量库（供 `build_parent_map` 解析）；S4 Context Builder 会用父块做预算分配。
 - 语义切块（按嵌入断句）留待按证据引入；接口 `chunk_fn` 已参数化，替换不影响索引器与检索层。
+
+---
+
+## 6. 后续变更（2026-10-11）
+
+> 按《实践项目合集·统一开发准则》第 3 条：**原文不动**，在此追加"修改后的完整架构说明"，并标注修改时间。
+
+**触发原因**：E 线 E00 基线不复现（0.8148 → 0.7407）。根因：`ingest/clean.py::normalize_text` 的
+"连续空行压缩 + 逐行 rstrip"会**删行**，使 `gold_evidence(file/line)` 行号错位。（详见 S2 报告 §9）
+
+### 6.1 修改后的完整架构说明（2026-10-11）
+
+**① 组件与职责**（除 `clean.py` 外均不变）
+
+| 组件 | 职责 | 文件 | 本次变化 |
+|---|---|---|---|
+| 文档加载 | 目录 → `Document` | `ingest/loader.py` | 无 |
+| **清洗去重** | **格式统一（BOM/换行）+ 内容去重** | `ingest/clean.py` | **`normalize_text` 改为保行号** |
+| 元数据 | source/section/position/updated_at/project_id/trust + 行号 | `ingest/metadata.py` | 无 |
+| 切块 | 定长（S1）与层级 Parent-Child（S2） | `ingest/chunker.py` | 无 |
+| 增量索引 | 以 `doc_id` diff | `index/indexer.py` | 无 |
+| 向量库 | numpy 内积 + `flt` + `remove_doc_ids` | `index/vector_store.py` | 无 |
+| 过滤 / Parent-Child | 过滤语义与子块→父块 | `retrieve/{filters,parent_child}.py` | 无 |
+
+**② 建索引数据流（更新点在"清洗"步骤）**
+
+```
+目录 ─▶ load_tree ─▶ clean_documents（仅去 BOM + 统一换行；**保行数**）
+        ─▶ dedupe_documents（同源留最新 + 内容哈希去重）
+        ─▶ chunk_documents（定长，chunk_id={doc_id}:{seq:04d}）＋ build_chunk_meta
+        ─▶ embed ─▶ NumpyVectorStore.add
+```
+
+**③ 关键契约**（不变）与**新增约束**
+
+- `Chunk.chunk_id = f"{doc_id}:{seq:04d}"`；层级块 `{doc_id}:P{seq:04d}` / `:C{seq:03d}`。
+- `VectorStore.search(query_vec, k, flt)`：先过滤后排序。
+- `IncrementalIndexer.update(docs) -> IndexUpdate{added,changed,removed,reused,chunks_rebuilt}`。
+- **新增不变量**：**清洗不得改变行数**（不压缩空行/不 strip），以保证证据制评测的行号映射稳定。
+
+**④ 不变量（L1，不变）**：仅重建受影响切片；其余 chunk 向量逐字节不变；`remove_doc_ids` 只行切片。
+
+**⑤ 边界与演进**（不变）：增量按内容指纹；父块入库供 S4 预算分配；语义切块按证据引入（`chunk_fn` 参数化）。
+
+**⑥ 复测证据（2026-10-11）**：`pytest` 77 passed；E00 `recall@5=0.8148 / mrr@5=0.7840 / ndcg@5=0.8965`（与 R0 冻结值一致）。

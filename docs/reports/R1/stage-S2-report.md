@@ -68,3 +68,19 @@ Parent-Child；更新/删除/增量索引——**只重建受影响的索引**�
 - `context/builder.py` → S4。
 - `code_rag/*` + `data/eval_suites/code_v1.jsonl` → S5。
 - `service/*`、`Dockerfile` → S7。
+
+---
+
+## 9. 后续变更（2026-10-11）
+
+> 按《实践项目合集·统一开发准则》第 2 条：历史报告**只追加、不改写**。以上正文保持原样。
+
+- **触发原因**：RAG 实验线建基线时发现 **E00 不复现**（R0 冻结 `recall@5=0.8148` → 现行代码 `0.7407`）。
+- **定位（二分）**：R0 worktree 复现 0.8148；现仓库逐项还原后定位到 `rag_engine/pipeline.build` 新增的
+  `clean_documents`。根因：`ingest/clean.py::normalize_text` 的"连续空行压缩"会**删行**，使 `gold_evidence`
+  （file/line 区间）行号错位 → 覆盖式 recall 假性下降（去重与元数据 enrichment 无责）。
+- **改动**：`normalize_text` 改为**仅做 BOM 去除 + 换行归一，保持行数不变**（不再压缩空行、不再逐行 rstrip）。
+  S2 的"清洗 + 去重 + 元数据 enrichment"仍保留。
+- **复测**：`python -m pytest -q` → **77 passed**；`run_eval --config configs/E00.yaml` →
+  `recall@5=0.8148 / mrr@5=0.7840 / ndcg@5=0.8965 / answer_accuracy=0.6875`（**与 R0 冻结值一致**）。
+- **影响面**：S2 的 L1/L2 结论不变；证据制评测不再受清洗影响；后续 E 线可在稳定基线上推进。
