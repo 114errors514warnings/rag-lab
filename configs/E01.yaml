@@ -1,0 +1,21 @@
+experiment_id: E01
+description: 解析器契约基线：与 E00 同系统参数，加入"解析正确性"的回归门禁（解析口径的显式锚点）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 400
+  chunk_overlap: 80
+  embed_provider: hashing
+  embed_dim: 1024
+  top_k: 5
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    max_delta: -0.01                  # 解析口径不得让召回回退超过 0.01
+  context_evidence_coverage:
+    max_delta: -0.01                  # 最终上下文覆盖不得回退
+  p95_latency_ms:
+    max: 500.0                        # 离线链路延迟上限
