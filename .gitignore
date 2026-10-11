@@ -14,3 +14,9 @@ snapshots/
 /reports/
 
 # 评测产物：baselines/ 需要入库（它是历史结论的依据）
+# Archify 运行收据（含本机绝对路径），不入库；仅保留架构图(.html)与源 IR(candidate.json)
+.archify/**/*.browser-check.json
+.archify/**/*.delivery.json
+.archify/**/*.finalize.json
+.archify/**/*.finalize-summary.json
+
