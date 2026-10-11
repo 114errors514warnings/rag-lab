@@ -22,6 +22,30 @@
    - **Tool Calling / Tool Executor：在本工作区未找到**（HIL 只"暴露" MCP 工具、ContextOptimizer 只统计工具数并接收工具结果反馈，都不是 Executor）。
    - Agent Runtime 线（A01–A10）：**0/10 未开始**；但有可复用资产（见 §5）。
 
+## 0.1 前置条件核对（**关联集口径**：仅 `rag-lab` + `agent-runtime`）
+
+A 手册 §二 的四项前置，逐项核对：
+
+| 前置条件 | 关联集内来源 | 状态 | 证据 |
+|---|---|---|---|
+| Python 工程基础 | rag-lab / agent-runtime | ✅ | 两个 pytest 工程（rag-lab 77 项、agent-runtime 33 项） |
+| 模型 API | 关联集内**默认离线** | 🟡 **接口已留、未启用** | rag-lab 有可选 `OpenAIEmbedder/OpenAIGenerator`；agent-runtime 尚未接模型 |
+| 结构化 Tool Schema / Executor | agent-runtime · M0（本次补齐） | ✅ | `src/tools/{spec,registry,executor}.py`，33 项 L1 通过 |
+| 可调用的 RAG 检索接口 | rag-lab · S7 | ✅ | `service/api.py` `/search` `/read_context` `/symbol`；`service/mcp_server.py` 三工具 |
+
+> 结论：**四项前置中 3 项已具备、1 项（真实模型 API）为"可选项待启用"**。A01 可先用**可插拔 LLM + 离线 FakeLLM**验证 Loop 机制（与本关联集既有"离线回放"纪律一致），再按需接入真实模型 API。
+
+## 0.2 计划完成情况（**关联集口径**）
+
+| 线 | 范围 | 完成度 |
+|---|---|---|
+| RAG 系统线 | S1–S7 | ✅ **7 / 7** |
+| RAG 实验线 | E00–E12 | 🟡 **1 / 13**（仅 E00 基线） |
+| Tool Calling | T01–T03 | ✅ **3 / 3**（M0 完成） |
+| Agent Runtime | A01–A10 | ⬜ **0 / 10** |
+
+里程碑：**M0 ✅**（前置工具层）；**M1(A01–A03) / M2(A04–A06) / M3(A07–A09) / M4(A10) ⬜**。
+
 ## 1. 三条线的依赖链
 
 ```
