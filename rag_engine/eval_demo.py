@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .eval_adapter import DemoDensePipeline, DemoHybridPipeline
 from .pipeline import RAGPipeline
-from .retrieve.rerank import LexicalReranker
+from .retrieve.rerank import IdfReranker, LexicalReranker
 from .retrieve.rewrite import multi_query
 from .schema import Retrieved
 
@@ -19,7 +19,8 @@ class _RerankRetriever:
 
     def retrieve(self, question: str, k: int, flt: dict | None = None):
         hits = self.base.retrieve(question, max(k, self.top_n), flt=flt)
-        return self.reranker.rerank(question, hits, top_k=k)
+        rerank_query = " ".join(multi_query(question))
+        return self.reranker.rerank(rerank_query, hits, top_k=k)
 
 
 class DemoRerankPipeline(DemoHybridPipeline):
@@ -72,7 +73,7 @@ class DemoMultiPipeline(DemoHybridPipeline):
         if getattr(pipeline, "_multi_installed", False):
             return pipeline
         pipeline.retriever = _RerankRetriever(_MultiQueryRetriever(pipeline.retriever, per_query=30),
-                                             LexicalReranker(top_n=50), 50)
+                                             IdfReranker(top_n=50), 50)
         pipeline._multi_installed = True
         return pipeline
 

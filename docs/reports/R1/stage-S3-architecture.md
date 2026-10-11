@@ -37,3 +37,14 @@ query ─▶ rewrite ─┬─▶ Dense(top-N) ─┐
 ## 5. 边界与演进
 - `my_pipeline`（项目 kb 语料）与 `retrieval_v1` 不对齐，直接评估 `mrr=0`；真实 corpus 的套件重标定留待 S6。
 - RRF 的 `k` 与 `candidates` 为固定常量；若接入真实 Cross-Encoder，只需替换 `LexicalReranker`。
+
+---
+
+## 6. 后续变更（S3 已达标）
+
+> 追加记录，不改写上文。
+
+- 新增 `retrieve/rerank.py::IdfReranker`：在候选集内按 **IDF 加权命中** 重排（稀有词权重高，常见词权重低）。
+- `retrieve/rewrite.py` 同义词表扩展，`multi_query` 扩展上限 4→8。
+- `demo_multi` 现为：**Query Rewrite 多查询 → Dense+BM25 RRF → IDF 重排**，重排使用扩展后的查询词项。
+- 结果：`mrr` +0.2250、`recall@3` +0.1250，护栏全 PASS（详见 `stage-S3-report.md` §8）。

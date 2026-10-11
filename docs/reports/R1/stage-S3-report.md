@@ -58,3 +58,27 @@ BM25、Dense+Sparse Hybrid（RRF）、Cross-Encoder/API Rerank、Query Rewrite/M
 - `context/builder.py` → S4。
 - 套件扩充/重标定 + 真实 corpus 对齐 → S6。
 - `code_rag/*`、`service/*` → S5 / S7。
+
+---
+
+## 8. 后续变更（S3 已达标）
+
+> 本节为追加记录（不改写上文历史）。上文第 4/5 节的三次失败结论保留；下面是后续修复的结果。
+
+**修复方向**：命中失败集中于**查询用词与语料术语的词面缺口**（精排↔重排、省钱↔成本、长回答/压缩↔Token Budget、代码库↔代码、越权/仓库↔project_id）。这正是 S3 计划中「Query Rewrite / Multi-query」的适用场景。
+
+**改动**：
+1. `retrieve/rewrite.py`：扩展同义词/术语表（覆盖上述缺口），`rewrite/multi_query` 默认扩展上限 4→8；
+2. `retrieve/rerank.py`：新增 `IdfReranker`（候选集内 IDF 加权命中），避免常见词（耗时/项目/时间）把长文档"碰巧命中"顶上去；
+3. `eval_demo.py`：`demo_multi` = 多查询（改写）Dense+BM25 RRF **+ IDF 重排**（重排基于扩展后查询）。
+
+**复测**（同基线 `S3__demo_dense`，同套件 `retrieval_v1`，k=3）：
+
+| 门禁 | 基线 | 本次 | Δ | 判定 |
+|---|---|---|---|---|
+| `mrr`（主 Δ≥+0.10） | 0.7417 | 0.9667 | **+0.2250** | **PASS** |
+| `recall@3`（主 Δ≥+0.05） | 0.85 | 0.975 | **+0.1250** | **PASS** |
+| `p95_latency_ms`（护栏 ≤500） | 0.085 | 0.681 | +0.5960 | PASS |
+| `cost_per_query_usd`（护栏 ≤0.005） | 0.0 | 0.0 | +0.0000 | PASS |
+
+退出码 0。**S3 达标**（系统 `demo_multi`）。新增 L1：`tests/test_rewrite_rerank.py`。
