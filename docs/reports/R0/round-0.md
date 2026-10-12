@@ -109,10 +109,10 @@ Answer ──► eval_adapter.MyPipeline.answer(case, k) ──► SystemAnswer�
 
 ### 2.2 R0 架构图
 
-用 [Archify](https://github.com/tt-a1i/archify)（本地部署于 `D:\MY\PubProj\archify`）从本仓库实际结构生成：
+用 [Archify](https://github.com/tt-a1i/archify)（本地部署于 `<archify>`）从本仓库实际结构生成：
 
 ```powershell
-node D:\MY\PubProj\archify\archify\bin\archify.mjs finalize architecture `
+node <archify>\bin\archify.mjs finalize architecture `
   docs\reports\R0\diagrams\round-0.architecture.json docs\reports\R0\diagrams\round-0.architecture.html `
   --quality showcase --json
 ```
