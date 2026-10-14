@@ -1,6 +1,6 @@
 # RAG 实验线 · E01–E12 计划与测试标准
 
-> 依据：`RAG阶段性实践清单.md`、`docs/guide/implementation-plan.md`（S1–S7）、`docs/reports/R0/round-0.md`（E 线映射）、
+> 依据：`RAG阶段性实践清单.md`、`docs/guide/implementation-plan.md`（S1–S7）、`docs/reports/S/R0/round-0.md`（E 线映射）、
 > `docs/guide/records-convention.md`。**E 线映射来自仓库既有线索；若与《RAG 架构验证与性能优化实验手册》原文有出入，以手册为准并在此追加修订。**
 >
 > 固定不变（跨阶段）：运行器 `scripts/run_eval.py`、数据集 `data/golden/cases.jsonl`（sha 冻结）、指标口径 `rag_eval/metrics.py`（改口径须 bump `EVAL_VERSION`）、报告格式。
@@ -15,8 +15,8 @@
   - 每阶段在 `configs/E0x.yaml` 里**预声明 gates**（`max` 绝对上限 / `min_delta` 提升 / `max_delta` 容忍回退）。
 - **A/B 配对**：自动输出逐题配对 + bootstrap 95% CI（跨 0 记"证据不足"）。
 - **产物**：`reports/{run_id}/{metrics.json,cases.jsonl,errors.csv,comparison.md}`、`traces/{run_id}.jsonl`；
-  阶段文档 `docs/reports/R{n}/<阶段>/stage-<阶段>-{report,architecture}.md`；重要阶段配 Archify 架构图。
-- **记录**：`docs/reports/R{n}/round-{n}.md` 不可变快照；历史只追加不改写（见统一开发准则）。
+  阶段文档 `docs/reports/E/<阶段>/stage-<阶段>-{report,architecture}.md`；重要阶段配 Archify 架构图。
+- **记录**：E 阶段文档在 `docs/reports/E/<阶段>/`；S 计划轮次快照在 `docs/reports/S/R{n}/round-{n}.md`；历史只追加不改写（见统一开发准则）。
 
 ## 1. R1（E01–E05 · 解析 / 切块 / 召回）
 

@@ -5,7 +5,7 @@
 - 状态：✅ 已完成（L1 + L2 通过）
 - 日期：2026-10-11
 - 架构说明：[`stage-S2-architecture.md`](stage-S2-architecture.md)
-- 架构图（Archify）：`../../../../.archify/architecture-s2-index-20261011-040000/s2-index-architecture.html`
+- 架构图（Archify）：`../../../../../.archify/architecture-s2-index-20261011-040000/s2-index-architecture.html`
 
 ## 1. 目标（清单项）
 清洗/去重/格式统一；固定长度 vs 语义 vs 层级切块；Chunk Metadata；Metadata Filtering；

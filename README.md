@@ -15,9 +15,9 @@
 | **RAG 系统本体 · 阶段一** | ✅ `rag_engine/`（离线 hashing-tfidf + numpy 向量库 + dense 检索 + 带引用生成；多项目隔离；PDF/OpenAI 可选） |
 | **实验平台 · M0** | ✅ `rag_lab/` + `scripts/`（快照 / Golden v2 / Trace / 配置驱动运行器 / 配对 bootstrap） |
 | 评测协议 v2 | ✅ 证据制（`gold_evidence` 行区间/symbol），新增 nDCG、证据覆盖、拒答、宏微平均 |
-| **E00 基线** | ✅ `recall@5=0.8148`、`trace=100%`（详见 `docs/reports/R0/round-0.md`） |
+| **E00 基线** | ✅ `recall@5=0.8148`、`trace=100%`（详见 `docs/reports/E/E00/` 与 `docs/reports/S/R0/round-0.md`） |
 | L1 功能测试 | ✅ `tests/`（92 项，`python -m pytest`） |
-| **系统本体 · 阶段二~七（S2–S7）** | ✅ 已全部达标（S3 经"查询改写+IDF 重排"达标；详见 `docs/reports/R1..R3/`） |
+| **系统本体 · 阶段二~七（S2–S7）** | ✅ 已全部达标（S3 经"查询改写+IDF 重排"达标；详见 `docs/reports/S/`） |
 | 实验线 E01–E12 | 🟡 E00/E01/E02 ✅；**E03 未通过（待修）**；E04–E12 ⬜（计划见 `docs/guide/experiment-plan-E01-E12.md`） |
 | **Agent Runtime 线 A01–A10** | ⬜ 规划已归档（`docs/guide/agent-runtime-plan-A01-A10.md`）；综合路线图见 `docs/guide/roadmap-merged.md` |
 
@@ -33,12 +33,12 @@ docs/
     roadmap-merged.md         #   综合路线图（S/E/T/A 合流）
     agent-runtime-plan-A01-A10.md  # Agent Runtime 线计划
     统一开发准则.md            #   关联集统一约束（汇报 / 只增不改 / 文档边界）
-  reports/                    # 逐轮次报告（按实验轮次分阶段；总索引 reports/README.md）
+  reports/                    # 文档报告：S / E 两棵树（总索引 reports/README.md）
     README.md                 #   报告总索引
-    R0/round-0.md + architecture.md   # R0 · 平台化基线（已冻结）
-    R0/diagrams/              #     round-0 架构图
-    R1/round-1.md + E01..S3/  # R1 · 解析/切块/召回（每阶段一夹）
-    R2/  R3/                  #   后续轮次
+    S/                        #   S 计划：按 R 轮次（R0–R3）
+      R0/ … R1/ … R2/ … R3/   #     每轮：round-N.md + <S阶段>/stage-S*-{report,architecture}.md
+    E/                        #   E 计划：按 E 阶段（E00–E12）
+      E00/ E01/ E02/ E03/     #     每阶段：stage-E*-{report,architecture}.md
 rag_engine/                   # 被测系统（Indexing / Retrieval / Answering）
 rag_eval/                     # 固定评测内核（schema / metrics / evidence / sut）
 rag_lab/                      # 实验平台（config / golden / scoring / trace）
@@ -91,9 +91,9 @@ RAG 实验线 E00–E02 ✅ / E03 ❌ / E04–E12 ⬜ ┴─▶ Project Knowledg
 ## 下一步（先闭环 RAG 实验线）
 
 > 依据 `docs/guide/roadmap-merged.md` §5：E 线是 Agent 线 A07（Memory + RAG）的前置，**先完成 E 线**。
-> 记录约定见 `docs/guide/records-convention.md`；本轮快照见 `docs/reports/R1/round-1.md`。
+> 记录约定见 `docs/guide/records-convention.md`；S 计划轮次快照见 `docs/reports/S/R1/round-1.md`。
 
-1. **修复 E03**（当前唯一未闭环实验）：为代码文件补"模块剩余块"（`kind="module"`）或采用定长∪符号并集，复测转绿（详见 `docs/reports/R1/E03/stage-E03-report.md` §5）。
+1. **修复 E03**（当前唯一未闭环实验）：为代码文件补"模块剩余块"（`kind="module"`）或采用定长∪符号并集，复测转绿（详见 `docs/reports/E/E03/stage-E03-report.md` §5）。
 2. **E05 优先于 E04**：接入 `system.retrieval`（Dense / BM25 / Hybrid）+ `min_relevance` 拒答，不依赖外部模型，顺带修 `no_answer_accuracy=0`。
 3. **E04**：待定"本地模型 / API / 暂保持离线（记 `BASELINE`）"后再做。
 4. E 线收敛后启动 T/A 线；`agent-runtime`（关联集内独立仓库）**本工作区未检出**，需先确认其位置或决定承载方式。

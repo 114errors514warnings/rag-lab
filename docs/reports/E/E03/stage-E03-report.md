@@ -58,7 +58,7 @@
 
 ## 6. 契约影响（留痕）
 本次给 `EngineConfig` 新增 `chunking` 语义参数 ⇒ **所有配置的 `config_hash` 变化**（含 E00/E01/E02）。
-历史报告的 `config_hash` 由旧口径产生，**不可与新值直接比较**（沿用 `docs/reports/R0/round-0.md` 的便携口径说明；
+历史报告的 `config_hash` 由旧口径产生，**不可与新值直接比较**（沿用 `docs/reports/S/R0/round-0.md` 的便携口径说明；
 如需可再向 E01/E02 报告追加"后续变更"）。指标口径未变（`EVAL_VERSION` 仍为 `v2`）。
 
 ## 7. 边界

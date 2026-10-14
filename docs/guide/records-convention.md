@@ -1,35 +1,46 @@
 # 记录约定与索引
 
-本项目按《RAG 阶段性实践清单》（系统侧）与《RAG 架构验证与性能优化实验手册》（实验侧）
-在**同一条流水线**上持续迭代。迭代的代价是：早期形态会被后续覆盖（文件被扩展、配置被改、
-指纹变化）。若不显式记录，"当时到底做了什么、边界在哪"就会丢失。
+本项目是**两套计划**在**同一条流水线**上持续迭代：
 
-因此约定：
+- **S 计划（系统建造）**——把 RAG 系统逐阶段造出来；来源《RAG 阶段性实践清单》→ `implementation-plan.md`。
+- **E 计划（实验验证）**——在系统上做单变量实验、量化归因；来源《RAG 架构验证与性能优化实验手册》→ `experiment-plan-E01-E12.md`。
 
-1. **每完成一个轮次，写一份记录**（`docs/reports/R{n}/round-{n}.md`），冻结：
-   目标、交付物与逐文件职责、对外契约、已验证行为、门禁/指标结果、**不做什么**、
-   以及**后续会改动哪些文件**（演进映射）。
-2. **记录是快照，只追加、不改写历史**。行为若被后续改变，在文末"后续变更"追加，而非抹掉原文。
-3. **数值基线不复制进记录**：记录只引用 `reports/{run_id}/` 与 `baselines/` 里的冻结文件。
-4. 系统能力（旧计划阶段）与实验结论（新手册轮次）**合并到同一份 `round-{n}.md`**，不再分两份。
+两者**有依赖**（E 跑在 S 造出的系统上），但是**不同的坐标、分别存放、分别追踪**。
 
-## 文档布局（教学 / 报告分离）
+## 记录约定
+
+1. **S 计划按 R 轮次记录**：每个轮次一次性实现多个 S 阶段，写一份不可变快照
+   `docs/reports/S/R{n}/round-{n}.md`；各阶段文档放
+   `docs/reports/S/R{n}/<S阶段>/stage-<S阶段>-{report,architecture}.md`。
+   **R 轮次只属于 S 计划**，不承载 E 的语义。
+2. **E 计划按 E 阶段记录**：每个实验阶段一份报告 + 一份架构说明，放
+   `docs/reports/E/<E阶段>/stage-<E阶段>-{report,architecture}.md`。
+3. **只增不改**：记录是快照；行为若被后续改变，在文末「后续变更」追加，而非改写原文。
+4. **数值不复制**：记录只引用 `reports/{run_id}/` 与 `baselines/` 里的冻结文件。
+
+## 文档布局
 
 ```
 docs/
-  guide/                     # 教学与规范文档（跨轮次长期有效）
-    implementation-plan.md   #   系统侧总纲（旧计划 S1–S7）
-    stage-gates.md           #   固定测试方法说明
-    records-convention.md    #   本文件：记录约定与索引
-  reports/                   # 逐轮次报告（按实验轮次 R0–R3 分阶段）
-    README.md                #   报告总索引
-    R0/                      #   R0 · 平台化基线
-      round-0.md
-      diagrams/round-0.architecture.{json,html}
-    R1/                      #   R1 · 解析/切块/召回（进行中）
-      round-1.md
-      E01/ E02/ E03/ S2/ S3/ #     每阶段一夹：stage-<id>-report.md + -architecture.md
-    R2/  R3/                 #   后续轮次
+  guide/                        # 教学与规范（跨计划长期有效）
+    implementation-plan.md      #   S 计划总纲（S1–S7）
+    experiment-plan-E01-E12.md  #   E 计划（E00–E12）
+    stage-gates.md
+    records-convention.md       #   本文件
+    roadmap-merged.md
+    agent-runtime-plan-A01-A10.md
+    统一开发准则.md
+  reports/
+    README.md                   #   报告总索引（S / E 两棵树）
+    S/                          #   S 计划：按 R 轮次
+      README.md
+      R0/ round-0.md · architecture.md · diagrams/
+      R1/ round-1.md · S2/ · S3/
+      R2/ S4/
+      R3/ S5/ · S6/ · S7/
+    E/                          #   E 计划：按 E 阶段
+      README.md
+      E00/ E01/ E02/ E03/ …
 ```
 
 > 代码（`rag_engine/` `rag_eval/` `rag_lab/` `scripts/` `tests/` `configs/` `data/`）
@@ -37,11 +48,23 @@ docs/
 
 ## 索引
 
-| 轮次 / 里程碑 | 系统侧对应 | 记录 | 状态 |
-|---|---|---|---|
-| R0 · 平台化基线（E00 + Golden + Trace） | 阶段一 · 基础 RAG Pipeline | [`../reports/R0/round-0.md`](../reports/R0/round-0.md) | ✅ 已冻结 |
-| R1 · E01–E05（解析/切块/召回） | 阶段二 + 阶段三前半 | [`../reports/R1/round-1.md`](../reports/R1/round-1.md) | 🟡 进行中（S2/S3 ✅；E01/E02 ✅；E03 ❌） |
-| R2 · E06–E09（排序/上下文/成本） | 阶段三后半 + 阶段四 | `../reports/R2/round-2.md` | ⬜ 待补 |
-| R3 · E10–E12 + 盲测 | 阶段五 + 六 + 七 | `../reports/R3/round-3.md` | ⬜ 待补 |
+### S 计划（按 R 轮次）
 
-> 总纲见 [`implementation-plan.md`](implementation-plan.md)；判据来源见 [`stage-gates.md`](stage-gates.md)。
+| 轮次 | 覆盖 S 阶段 | 记录 | 状态 |
+|---|---|---|---|
+| R0 | S1 · 基础 Pipeline | [`../reports/S/R0/round-0.md`](../reports/S/R0/round-0.md) | ✅ 已冻结 |
+| R1 | S2 · 文档与索引 ＋ S3 · 检索质量 | [`../reports/S/R1/round-1.md`](../reports/S/R1/round-1.md) | 🟡 进行中 |
+| R2 | S4 · Context Engineering | `../reports/S/R2/round-2.md` | ⬜ 待补 |
+| R3 | S5 · Code RAG ＋ S6 · 回归 ＋ S7 · 服务化 | `../reports/S/R3/round-3.md` | ⬜ 待补 |
+
+### E 计划（按 E 阶段）
+
+| 阶段 | 状态 | 记录 |
+|---|---|---|
+| E00 · 基线 | ✅ | [`../reports/E/E00/`](../reports/E/E00/) |
+| E01 · 解析器 | ✅ | [`../reports/E/E01/`](../reports/E/E01/) |
+| E02 · 切块参数 | ✅ | [`../reports/E/E02/`](../reports/E/E02/) |
+| E03 · 符号级切块 | ❌ 未通过（3 次尝试） | [`../reports/E/E03/`](../reports/E/E03/) |
+| E04–E12 | ⬜ 未做 | — |
+
+> 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。

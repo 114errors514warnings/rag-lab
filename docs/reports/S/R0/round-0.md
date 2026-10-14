@@ -1,7 +1,7 @@
 # 实验轮次记录 · R0 / M0 平台化基线（冻结快照）
 
 > 对应《RAG 架构验证与性能优化实验手册》第 1 轮（E00 + Golden + Trace）。
-> 合并了原「阶段一记录」（基础 RAG Pipeline）的简要内容；记录约定见 [`../../guide/records-convention.md`](../../guide/records-convention.md)。
+> 合并了原「阶段一记录」（基础 RAG Pipeline）的简要内容；记录约定见 [`../../../guide/records-convention.md`](../../../guide/records-convention.md)。
 > 这是**平台 + 被其验证的系统**的联合快照，后续轮次会覆盖 `rag_engine/` 与 `rag_lab/` 里的文件。
 
 ## 0. 元信息
@@ -18,7 +18,7 @@
 | 数据集 | `data/golden/cases.jsonl`（32 题，sha `626aa1732b4f8e12`） |
 | E00 run_id | `20261009T155134_E00_e821df85555c_nogit_df5eb069a83579d2_626aa1732b4f8e12` |
 | 报告 / Trace | `reports/{run_id}/{metrics.json,cases.jsonl,errors.csv,comparison.md}` · `traces/{run_id}.jsonl` |
-| 架构图 | `docs/reports/R0/diagrams/round-0.architecture.html`（源 `.../round-0.architecture.json`，由 Archify 生成，showcase 质量门禁全过） |
+| 架构图 | `docs/reports/S/R0/diagrams/round-0.architecture.html`（源 `.../round-0.architecture.json`，由 Archify 生成，showcase 质量门禁全过） |
 
 ## 1. 系统本体（原阶段一，简要）
 
@@ -117,8 +117,8 @@ node <archify>\bin\archify.mjs finalize architecture `
   --quality showcase --json
 ```
 
-- 源文件：`docs/reports/R0/diagrams/round-0.architecture.json`（Typed JSON IR，可继续迭代）
-- 成品：`docs/reports/R0/diagrams/round-0.architecture.html`（自包含交互式 HTML，可直接浏览器打开）
+- 源文件：`docs/reports/S/R0/diagrams/round-0.architecture.json`（Typed JSON IR，可继续迭代）
+- 成品：`docs/reports/S/R0/diagrams/round-0.architecture.html`（自包含交互式 HTML，可直接浏览器打开）
 - 门禁：`validate / deliver / check / browser-check` 全部 pass
 
 ## 3. E00 基线数值（冻结）

@@ -1,7 +1,7 @@
 # rag-lab · S3 架构说明 · 检索质量优化
 
 > 配套报告：[`stage-S3-report.md`](stage-S3-report.md)
-> 架构图（Archify，全部闸门通过）：`../../../../.archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html`
+> 架构图（Archify，全部闸门通过）：`../../../../../.archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html`
 
 ## 1. 组件与职责
 

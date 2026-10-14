@@ -2,7 +2,7 @@
 
 > 轮次 R1 对应 E01–E05 与系统侧阶段二 + 阶段三前半。**本轮尚未完成**（E04/E05 未做），
 > 这是**滚动快照**：完成的部分先冻结，后续在此**追加**，不改写。
-> 记录约定见 [`../../guide/records-convention.md`](../../guide/records-convention.md)；开发纪律见 [`../../guide/统一开发准则.md`](../../guide/统一开发准则.md)。
+> 记录约定见 [`../../../guide/records-convention.md`](../../../guide/records-convention.md)；开发纪律见 [`../../../guide/统一开发准则.md`](../../../guide/统一开发准则.md)。
 
 ## 0. 元信息
 
@@ -75,7 +75,7 @@
 
 1. **E03 未通过（阻塞 R1 收尾）**
    - 根因（实测）：符号块只覆盖函数/类/方法体，**丢失模块级区域**（imports / docstring / 常量 / 顶层语句），落在这些行的 `gold_evidence` 无法被检索。
-   - 修法（见 `E03/stage-E03-report.md` §5）：为代码文件补**"模块剩余块"**（`meta.kind="module"`），或采用 **定长 ∪ 符号** 并集；修后复测并转绿。
+   - 修法（见 `../../E/E03/stage-E03-report.md` §5）：为代码文件补**"模块剩余块"**（`meta.kind="module"`），或采用 **定长 ∪ 符号** 并集；修后复测并转绿。
 2. **`retrieval_v1` 与真实 kb 语料不对齐**：其 `relevant_chunk_ids` 指向 demo 语料，直接跑真实 `my_pipeline` 时 `mrr=0`。S3 已用 `demo_*` 系统使对比成立；根治在 **S6 扩充/重标定检索套件**。
 
 ## 6. 边界（本轮未做）
@@ -113,7 +113,7 @@ python scripts/run_eval.py --config configs/E03.yaml --baseline <E02 run_id>
 
 ### 2026-10-14 · E03 修复尝试（模块剩余块）
 
-按 `E03/stage-E03-report.md` §5 补了"模块剩余块"（`kind="module"`）。复测：`recall@5 0.5926→0.8148`（回到 E00 定长水平），
+按 `../../E/E03/stage-E03-report.md` §5 补了"模块剩余块"（`kind="module"`）。复测：`recall@5 0.5926→0.8148`（回到 E00 定长水平），
 但相对 E02(512/80) 仍 `recall@5 −0.0371`、`mrr@5 −0.0216`，**门禁仍 FAIL**（逐题仅差 1 题：少覆盖 A13/A18，多覆盖 B06）。
 根因：覆盖式 `recall@5` 对多证据题偏好更粗的块，符号块粒度更细。L1 94 passed。
 待决策方案见该报告 §8（并集 / 按预算合并 / 保持未达标先推进 E04–E05）。

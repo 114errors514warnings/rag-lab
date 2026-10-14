@@ -1,21 +1,15 @@
 # 报告索引（docs/reports）
 
-按**实验轮次** R0–R3 分阶段；每轮含一份不可变快照 `round-{n}.md`，以及**每阶段一个子文件夹**
-（`<阶段>/stage-<阶段>-report.md` + `stage-<阶段>-architecture.md`）。
+报告按**两套计划**分开存放：
 
-| 轮次 | 快照 | 阶段子文件夹 | 状态 |
-|---|---|---|---|
-| R0 · 平台化基线 | [`R0/round-0.md`](R0/round-0.md) | [`R0/architecture.md`](R0/architecture.md) + [`R0/diagrams/`](R0/diagrams/) | ✅ 已冻结 |
-| R1 · 解析/切块/召回 | [`R1/round-1.md`](R1/round-1.md) | `R1/E01` `R1/E02` `R1/E03` `R1/S2` `R1/S3` | 🟡 进行中（E03 ❌） |
-| R2 · 排序/上下文/成本 | `R2/round-2.md`（待补） | `R2/S4` | 🟡 进行中 |
-| R3 · 增量/隔离/服务化 | `R3/round-3.md`（待补） | `R3/S5` `R3/S6` `R3/S7` | 🟡 进行中 |
+| 计划 | 含义 | 来源 | 单位 | 存放 |
+|---|---|---|---|---|
+| **S**（系统建造） | 把 RAG 系统逐阶段造出来 | 《RAG 阶段性实践清单》 | S1–S7 阶段 | [`S/`](S/) · 按 **R 轮次**分批 |
+| **E**（实验验证） | 在系统上做单变量实验、量化归因 | 《RAG 架构验证与性能优化实验手册》 | E00–E12 实验 | [`E/`](E/) · 按 **E 阶段**存放 |
 
-## 命名与放置约定
+- **S 计划索引**：[`S/README.md`](S/README.md)（R0–R3 轮次 + 各轮内的 S 阶段）
+- **E 计划索引**：[`E/README.md`](E/README.md)（E00–E12 阶段）
+- 约定见 [`../guide/records-convention.md`](../guide/records-convention.md)；
+  开发纪律见 [`../guide/统一开发准则.md`](../guide/统一开发准则.md)。
 
-- 快照：`R{n}/round-{n}.md`（不可变，只追加）。
-- 阶段报告 / 架构说明：`R{n}/<阶段>/stage-<阶段>-report.md` 、`stage-<阶段>-architecture.md`
-  （阶段 = `E01`…`E12`、`S1`…`S7`）。
-- 架构图：`R{n}/diagrams/` 或项目根 `.archify/<type>-<slug>-<时间戳>/`。
-
-> 约定与模板见 [`../guide/records-convention.md`](../guide/records-convention.md)；
-> 开发纪律见 [`../guide/统一开发准则.md`](../guide/统一开发准则.md)。
+> 两棵树的关系：E 的每个实验都跑在 S 造出的系统上（E 依赖 S），但两者是**不同的坐标、分别追踪进度**。

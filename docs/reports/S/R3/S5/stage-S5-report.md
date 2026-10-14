@@ -4,7 +4,7 @@
 - 状态：✅ 完成（L1 + L2 通过，1 次通过）
 - 日期：2026-10-11
 - 架构说明：[`stage-S5-architecture.md`](stage-S5-architecture.md)
-- 架构图（Archify）：`../../../../.archify/architecture-s5-code-20261011-124500/s5-code-architecture.html`
+- 架构图（Archify）：`../../../../../.archify/architecture-s5-code-20261011-124500/s5-code-architecture.html`
 
 ## 1. 目标
 扫描代码、AST 结构化切块（函数/类/方法）、符号索引、依赖关系、多项目隔离；自然语言可定位函数，任意用例不混入其它项目。

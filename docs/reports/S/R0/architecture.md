@@ -68,4 +68,4 @@ data/golden/cases.jsonl ──▶ 逐题 answer() ──▶ score_case → aggre
 - 边界（本阶段不做）：清洗/去重、语义/层级切块、Parent-Child、Metadata Filtering、增量索引、
   BM25/Hybrid/Rerank/Rewrite、Context 压缩与预算、AST/符号索引、忠实度评测、FastAPI/MCP/Docker；
   默认不调用真实神经网络 Embedding/LLM（离线可复现）。
-- 架构图：`docs/reports/R0/diagrams/round-0.architecture.html`（Archify，全闸门通过）。
+- 架构图：`docs/reports/S/R0/diagrams/round-0.architecture.html`（Archify，全闸门通过）。

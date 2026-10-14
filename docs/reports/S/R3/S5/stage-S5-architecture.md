@@ -1,7 +1,7 @@
 # rag-lab · S5 架构说明 · Code RAG
 
 > 报告：[`stage-S5-report.md`](stage-S5-report.md)
-> 架构图（Archify，全闸门通过）：`../../../../.archify/architecture-s5-code-20261011-124500/s5-code-architecture.html`
+> 架构图（Archify，全闸门通过）：`../../../../../.archify/architecture-s5-code-20261011-124500/s5-code-architecture.html`
 
 ## 1. 组件与职责
 | 组件 | 职责 | 文件 |
