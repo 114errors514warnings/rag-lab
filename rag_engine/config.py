@@ -31,7 +31,14 @@ class EngineConfig:
 
     # --- 检索 ---
     top_k: int = 3
-    min_relevance: float = 0.0  # 低于该余弦分视为无命中（不产生引用）
+    #: 检索模式：dense（默认）| bm25 | hybrid（Dense+BM25 的 RRF 融合）
+    retrieval: str = "dense"
+    #: 重排：none（默认）| lexical | idf | siliconflow
+    rerank: str = "none"
+    #: 重排候选数（先召回该数量，再重排到 top_k）
+    rerank_candidates: int = 50
+    #: 拒答阈值：dense=余弦；rerank=rerank 分数（bm25/hybrid 无重排时不使用）
+    min_relevance: float = 0.0
 
     # --- 生成 ---
     generator: str = "extractive"  # extractive（离线默认）| openai

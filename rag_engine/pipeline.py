@@ -48,6 +48,43 @@ def compute_manifest(raw_dir: Path | str) -> dict[str, str]:
     return {p.relative_to(raw_dir).as_posix(): _file_sha256(p) for p in iter_source_files(raw_dir)}
 
 
+def _make_retriever(config: EngineConfig, embedder, store):
+    """按 ``config.retrieval`` / ``config.rerank`` 组装检索器（``build`` 与 ``load`` 共用）。
+
+    - retrieval: dense | bm25 | hybrid（Dense+BM25 RRF）
+    - rerank:    none | lexical | idf | siliconflow（在候选集上重排）
+    拒答阈值在 pipeline 层统一处理，此处的 dense 不预过滤。
+    """
+    from .index.bm25_store import BM25Store
+    from .retrieve.hybrid import HybridRetriever
+    from .retrieve.rerank import IdfReranker, LexicalReranker, RerankedRetriever, SiliconFlowReranker
+    from .retrieve.sparse import SparseRetriever
+
+    dense = DenseRetriever(embedder, store, min_relevance=0.0)
+    mode = getattr(config, "retrieval", "dense")
+    if mode == "dense":
+        base = dense
+    elif mode in ("bm25", "hybrid"):
+        bm25 = BM25Store()
+        bm25.add(list(store.chunks))
+        base = SparseRetriever(bm25) if mode == "bm25" else HybridRetriever(
+            dense, SparseRetriever(bm25), candidates=config.rerank_candidates)
+    else:
+        raise ValueError(f"未知 retrieval：{mode}")
+
+    kind = getattr(config, "rerank", "none")
+    if kind == "none":
+        return base
+    factories = {
+        "lexical": lambda: LexicalReranker(top_n=config.rerank_candidates),
+        "idf": lambda: IdfReranker(top_n=config.rerank_candidates),
+        "siliconflow": lambda: SiliconFlowReranker(top_n=config.rerank_candidates),
+    }
+    if kind not in factories:
+        raise ValueError(f"未知 rerank：{kind}")
+    return RerankedRetriever(base, factories[kind](), candidates=config.rerank_candidates)
+
+
 class RAGPipeline:
     def __init__(self, config: EngineConfig, embedder, store, retriever, generator) -> None:
         self.config = config
@@ -85,7 +122,7 @@ class RAGPipeline:
         vectors = embedder.embed(texts)
         store = NumpyVectorStore()
         store.add(chunks, vectors)
-        retriever = DenseRetriever(embedder, store, min_relevance=config.min_relevance)
+        retriever = _make_retriever(config, embedder, store)
         generator = build_generator(config.generator, config.gen_model, config.max_context_chunks)
         return cls(config, embedder, store, retriever, generator)
 
@@ -97,7 +134,18 @@ class RAGPipeline:
         flt = {"project_id": project_id} if project_id else None
         hits = self.retriever.retrieve(question, k, flt=flt)
         gen: Generation = self.generator.generate(question, hits)
-        refused = (not hits) or (not gen.citations)
+        min_rel = self.config.min_relevance
+        low = bool(min_rel) and (not hits or hits[0].score < min_rel)
+        refused = low or (not hits) or (not gen.citations)
+        latency = (time.perf_counter() - started) * 1000.0
+        if low:
+            # 拒答：不返回引用/答案，避免引用无关证据（检索结果仍保留在 trace 中）
+            return Answer(
+                answer="", retrieved=hits,
+                context_chunk_ids=[h.chunk.chunk_id for h in hits], refused=True,
+                prompt_tokens=gen.prompt_tokens, completion_tokens=0,
+                cost_usd=gen.cost_usd, latency_ms=latency,
+            )
         return Answer(
             answer=gen.answer,
             retrieved=hits,
@@ -107,7 +155,7 @@ class RAGPipeline:
             prompt_tokens=gen.prompt_tokens,
             completion_tokens=gen.completion_tokens,
             cost_usd=gen.cost_usd,
-            latency_ms=(time.perf_counter() - started) * 1000.0,
+            latency_ms=latency,
         )
 
     # ------------------------------------------------------------ 持久化
@@ -136,7 +184,7 @@ class RAGPipeline:
         else:
             embedder = HashingTfidfEmbedder.load(index_dir)
         store = NumpyVectorStore.load(index_dir)
-        retriever = DenseRetriever(embedder, store, min_relevance=config.min_relevance)
+        retriever = _make_retriever(config, embedder, store)
         generator = build_generator(config.generator, config.gen_model, config.max_context_chunks)
         return cls(config, embedder, store, retriever, generator)
 

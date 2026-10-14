@@ -1,0 +1,24 @@
+experiment_id: E05_bm25
+description: 检索策略对照 · BM25（主变量：retrieval；其余同 E05_dense）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: bm25
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    max_delta: -0.02
+  mrr@5:
+    max_delta: -0.02
+  p95_latency_ms:
+    max: 2500.0

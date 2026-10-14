@@ -11,7 +11,8 @@ import yaml
 
 ENGINE_FIELDS = {
     "chunk_size", "chunk_overlap", "chunking", "embed_provider", "embed_dim", "embed_model",
-    "top_k", "min_relevance", "generator", "gen_model", "max_context_chunks", "raw_dir",
+    "top_k", "retrieval", "rerank", "rerank_candidates", "min_relevance",
+    "generator", "gen_model", "max_context_chunks", "raw_dir",
 }
 
 

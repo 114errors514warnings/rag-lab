@@ -1,0 +1,26 @@
+experiment_id: E06_rerank
+description: Rerank + 拒答（SiliconFlow BAAI/bge-reranker-v2-m3；基座 Dense = E05 最优）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_candidates: 20
+  min_relevance: 0.05          # 拒答阈值：rerank score（no_answer 探测 ≤0.048）
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  mrr@5:
+    min_delta: 0.0             # 重排应提升或持平排序质量
+  no_answer_accuracy:
+    min_delta: 0.0             # 拒答应改善（基线为 0）
+  p95_latency_ms:
+    max: 4000.0                # 含 embedding + rerank 两次 API 调用

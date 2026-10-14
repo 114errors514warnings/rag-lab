@@ -59,3 +59,62 @@ class IdfReranker:
         scored.sort(key=lambda item: (-item[0], -item[1], item[2].chunk.chunk_id))
         out = [hit for _, _, hit in scored]
         return out[:top_k] if top_k else out
+
+
+class SiliconFlowReranker:
+    """SiliconFlow 免费 Rerank API（默认 ``BAAI/bge-reranker-v2-m3``）。
+
+    密钥只从环境变量 ``SILICONFLOW_API_KEY`` 读取，不入库；返回的 relevance_score
+    既用于重排排序，也用作拒答信号。
+    """
+
+    BASE_URL = "https://api.siliconflow.cn/v1/rerank"
+    DEFAULT_MODEL = "BAAI/bge-reranker-v2-m3"
+
+    def __init__(self, model: str = DEFAULT_MODEL, top_n: int = 50,
+                 api_key_env: str = "SILICONFLOW_API_KEY") -> None:
+        self.model = model or self.DEFAULT_MODEL
+        self.top_n = top_n
+        self.api_key_env = api_key_env
+        self.name = f"siliconflow:{self.model}"
+
+    def _key(self) -> str:
+        import os
+
+        key = os.environ.get(self.api_key_env)
+        if not key:
+            raise RuntimeError(f"未设置环境变量 {self.api_key_env}（密钥不入库）")
+        return key
+
+    def rerank(self, question: str, hits: list[Retrieved], top_k: int | None = None) -> list[Retrieved]:
+        import httpx
+
+        candidates = list(hits[: self.top_n])
+        if not candidates:
+            return []
+        resp = httpx.post(
+            self.BASE_URL,
+            headers={"Authorization": "Bearer " + self._key()},
+            json={"model": self.model, "query": question,
+                  "documents": [h.chunk.text for h in candidates]},
+            timeout=60,
+        )
+        resp.raise_for_status()
+        results = resp.json()["results"]
+        order = sorted(results, key=lambda x: (-float(x["relevance_score"]), int(x["index"])))
+        out = [Retrieved(chunk=candidates[int(x["index"])].chunk,
+                         score=round(float(x["relevance_score"]), 6)) for x in order]
+        return out[:top_k] if top_k else out
+
+
+class RerankedRetriever:
+    """先召回 ``candidates`` 个候选，再用 reranker 重排到 ``k``。"""
+
+    def __init__(self, base, reranker, candidates: int = 50) -> None:
+        self.base = base
+        self.reranker = reranker
+        self.candidates = max(candidates, 1)
+
+    def retrieve(self, question: str, k: int, flt: dict | None = None) -> list[Retrieved]:
+        candidates = self.base.retrieve(question, max(k, self.candidates), flt=flt)
+        return self.reranker.rerank(question, candidates, top_k=k)

@@ -36,7 +36,12 @@ class MyPipeline:
             emb = f"openai:{cfg.embed_model}"
         else:
             emb = "hashing-tfidf"
-        return f"rag_engine({emb} + {cfg.chunking} + {getattr(cfg, 'retrieval', 'dense')} + extractive)"
+        parts = [emb, cfg.chunking, getattr(cfg, "retrieval", "dense")]
+        rerank = getattr(cfg, "rerank", "none")
+        if rerank != "none":
+            parts.append(f"rerank:{rerank}")
+        parts.append("extractive")
+        return "rag_engine(" + " + ".join(parts) + ")"
 
     @property
     def config_hash(self) -> str:
