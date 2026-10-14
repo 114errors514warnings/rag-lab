@@ -36,7 +36,7 @@ docs/
 | 轮次 / 里程碑 | 系统侧对应 | 记录 | 状态 |
 |---|---|---|---|
 | R0 · 平台化基线（E00 + Golden + Trace） | 阶段一 · 基础 RAG Pipeline | [`../reports/R0/round-0.md`](../reports/R0/round-0.md) | ✅ 已冻结 |
-| R1 · E01–E05（解析/切块/召回） | 阶段二 + 阶段三前半 | `../reports/R1/round-1.md` | ⬜ 待补 |
+| R1 · E01–E05（解析/切块/召回） | 阶段二 + 阶段三前半 | [`../reports/R1/round-1.md`](../reports/R1/round-1.md) | 🟡 进行中（S2/S3 ✅；E01/E02 ✅；E03 ❌） |
 | R2 · E06–E09（排序/上下文/成本） | 阶段三后半 + 阶段四 | `../reports/R2/round-2.md` | ⬜ 待补 |
 | R3 · E10–E12 + 盲测 | 阶段五 + 六 + 七 | `../reports/R3/round-3.md` | ⬜ 待补 |
 
