@@ -69,8 +69,8 @@ class RAGPipeline:
             chunks = chunk_documents(docs, size=config.chunk_size, overlap=config.chunk_overlap)
         by_id = {doc.doc_id: doc for doc in docs}
         for chunk in chunks:
-            if chunk.meta.get("symbol"):
-                continue  # 符号块自带 meta（symbol/kind/file/span），不覆盖
+            if chunk.meta.get("kind"):
+                continue  # 符号块/模块块自带 meta（symbol/kind/file/span），不覆盖
             doc = by_id.get(chunk.doc_id)
             if doc is not None:
                 chunk.meta.update(build_chunk_meta(

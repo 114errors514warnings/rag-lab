@@ -62,3 +62,28 @@ def test_syntax_error_falls_back() -> None:
     bad = _doc("def broken(:\n    pass")
     assert chunk_document_symbols(bad) == []
     assert chunk_documents_symbol([bad])  # 回退定长后仍有块
+
+
+# --- E03 修复（2026-10-14）：模块剩余块 ---
+
+def test_module_remainder_chunks_cover_module_level() -> None:
+    chunks = chunk_document_symbols(_doc(PY))
+    module = [c for c in chunks if c.meta["kind"] == "module"]
+    assert module, "模块级区域应产出 module 块"
+    text = "\n".join(c.text for c in module)
+    assert "import os" in text and "MAX = 10" in text
+    # 模块块无 symbol（用 None 占位，保持 meta 键存在）
+    assert all(c.meta["symbol"] is None for c in module)
+
+
+def test_all_nonempty_source_lines_are_covered() -> None:
+    """修复的核心不变量：源文件每个非空行都至少被一个块（符号或模块）覆盖。"""
+    doc = _doc(PY)
+    lines = doc.text.split("\n")
+    covered: set[int] = set()
+    for chunk in chunk_document_symbols(doc):
+        for line_no in range(chunk.meta["start_line"], chunk.meta["end_line"] + 1):
+            covered.add(line_no)
+    missing = [n for n in range(1, len(lines) + 1) if lines[n - 1].strip() and n not in covered]
+    assert not missing, f"存在未被覆盖的非空行：{missing}"
+
