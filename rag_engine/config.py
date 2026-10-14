@@ -33,6 +33,8 @@ class EngineConfig:
     top_k: int = 3
     #: 检索模式：dense（默认）| bm25 | hybrid（Dense+BM25 的 RRF 融合）
     retrieval: str = "dense"
+    #: 查询改写/多查询：none（默认）| multi
+    rewrite: str = "none"
     #: 重排：none（默认）| lexical | idf | siliconflow
     rerank: str = "none"
     #: 重排模型（rerank=siliconflow 时使用）

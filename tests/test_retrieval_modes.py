@@ -78,3 +78,23 @@ def test_siliconflow_reranker_requires_key(monkeypatch) -> None:
     chunk = Chunk(chunk_id="c", doc_id="d", text="x", meta={})
     with pytest.raises(RuntimeError, match="SILICONFLOW_API_KEY"):
         SiliconFlowReranker().rerank("q", [Retrieved(chunk=chunk, score=1.0)])
+
+
+def test_multiquery_retriever_fuses_deterministically() -> None:
+    from rag_engine.retrieve.rewrite import MultiQueryRetriever
+
+    emb, store = _store()
+    base = _make_retriever(EngineConfig(retrieval="dense"), emb, store)
+    r = MultiQueryRetriever(base, queries_fn=lambda q: [q, q + " gamma"], candidates=10)
+    a = [h.chunk.chunk_id for h in r.retrieve("alpha", 2)]
+    b = [h.chunk.chunk_id for h in r.retrieve("alpha", 2)]
+    assert a == b  # RRF 融合确定
+    assert len(a) <= 2
+
+
+def test_rewrite_multi_wraps_retriever() -> None:
+    from rag_engine.retrieve.rewrite import MultiQueryRetriever
+
+    emb, store = _store()
+    r = _make_retriever(EngineConfig(retrieval="dense", rewrite="multi"), emb, store)
+    assert isinstance(r, MultiQueryRetriever)

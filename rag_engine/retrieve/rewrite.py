@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from ..index.bm25_store import tokenize
+from ..schema import Retrieved
 
 SYNONYMS: dict[str, str] = {
     "切块": "chunk chunking overlap",
@@ -68,3 +69,33 @@ def rewrite(question: str, limit: int = 8) -> list[str]:
 
 def multi_query(question: str, limit: int = 8) -> list[str]:
     return rewrite(question, limit=limit)
+
+
+class MultiQueryRetriever:
+    """多查询检索：把 ``queries_fn`` 产出的多条查询各召回一路候选，再用 RRF 融合。
+
+    与 :class:`HybridRetriever` 的区别：这里融合的是**同一检索器的多路查询结果**，
+    用于缓解"中文提问 ↔ 英文实现"的词面缺口。融合确定（RRF）。
+    """
+
+    def __init__(self, base, queries_fn=None, candidates: int = 50, rrf_k: int = 60) -> None:
+        self.base = base
+        self.queries_fn = queries_fn or multi_query
+        self.candidates = max(candidates, 1)
+        self.rrf_k = rrf_k
+
+    def retrieve(self, question: str, k: int, flt: dict | None = None) -> list[Retrieved]:
+        from .hybrid import rrf_fuse
+
+        queries = self.queries_fn(question)
+        n = max(k, self.candidates)
+        lists: list[list[str]] = []
+        by_id: dict[str, object] = {}
+        for q in queries:
+            hits = self.base.retrieve(q, n, flt=flt)
+            lists.append([h.chunk.chunk_id for h in hits])
+            for h in hits:
+                by_id.setdefault(h.chunk.chunk_id, h.chunk)
+        fused = rrf_fuse(lists, k=self.rrf_k)
+        return [Retrieved(chunk=by_id[cid], score=round(score, 6))
+                for cid, score in fused[:k] if cid in by_id]

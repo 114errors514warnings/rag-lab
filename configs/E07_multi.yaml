@@ -1,0 +1,30 @@
+experiment_id: E07_multi
+description: Query Rewrite / Multi-query（中文→英文术语扩展 + 多查询 RRF 融合；基座同 E06，多语言模型）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  rewrite: multi
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    min_delta: 0.0             # 改写/多查询应提升或保持召回
+  mrr@5:
+    max_delta: -0.01           # 排序护栏
+  no_answer_accuracy:
+    min_delta: 0.0             # 拒答不得回退
+  p95_latency_ms:
+    max: 4000.0

@@ -72,6 +72,11 @@ def _make_retriever(config: EngineConfig, embedder, store):
     else:
         raise ValueError(f"未知 retrieval：{mode}")
 
+    if getattr(config, "rewrite", "none") == "multi":
+        from .retrieve.rewrite import MultiQueryRetriever
+
+        base = MultiQueryRetriever(base, candidates=config.rerank_candidates)
+
     kind = getattr(config, "rerank", "none")
     if kind == "none":
         return base
