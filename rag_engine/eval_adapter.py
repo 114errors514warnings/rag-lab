@@ -20,14 +20,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class MyPipeline:
-    """阶段一最小系统的评测适配层。"""
-
-    name = "rag_engine(hashing-tfidf + dense + extractive)"
+    """系统本体的评测适配层（``name`` 随配置动态反映真实模型/切块/检索）。"""
 
     def __init__(self, config: EngineConfig | None = None) -> None:
         self.config = config or EngineConfig()
         self._root = ROOT
         self.pipeline: RAGPipeline | None = None
+
+    @property
+    def name(self) -> str:
+        cfg = self.config
+        if cfg.embed_provider == "siliconflow":
+            emb = f"siliconflow:{cfg.embed_model}"
+        elif cfg.embed_provider == "openai":
+            emb = f"openai:{cfg.embed_model}"
+        else:
+            emb = "hashing-tfidf"
+        return f"rag_engine({emb} + {cfg.chunking} + {getattr(cfg, 'retrieval', 'dense')} + extractive)"
 
     @property
     def config_hash(self) -> str:

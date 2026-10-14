@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .config import EngineConfig
-from .embed.embedder import HashingTfidfEmbedder, OpenAIEmbedder, build_embedder
+from .embed.embedder import HashingTfidfEmbedder, OpenAIEmbedder, SiliconFlowEmbedder, build_embedder
 from .generate.generator import Generation, build_generator
 from .index.vector_store import NumpyVectorStore
 from .ingest.chunker import chunk_documents
@@ -128,7 +128,10 @@ class RAGPipeline:
     @classmethod
     def load(cls, config: EngineConfig, index_dir: Path | str) -> "RAGPipeline":
         index_dir = Path(index_dir)
-        if config.embed_provider == "openai":
+        if config.embed_provider == "siliconflow":
+            use_model = config.embed_model if "/" in config.embed_model else SiliconFlowEmbedder.DEFAULT_MODEL
+            embedder = SiliconFlowEmbedder(model=use_model, dim=config.embed_dim)
+        elif config.embed_provider == "openai":
             embedder = OpenAIEmbedder(model=config.embed_model, dim=config.embed_dim)
         else:
             embedder = HashingTfidfEmbedder.load(index_dir)

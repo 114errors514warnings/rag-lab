@@ -1,0 +1,23 @@
+experiment_id: E04
+description: Embedding 对照：SiliconFlow BAAI/bge-m3 vs hashing-tfidf（其余同 E02：512/80）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    min_delta: 0.0                 # 真实语义向量相对 hashing 不得回退
+  mrr@5:
+    max_delta: -0.01
+  p95_latency_ms:
+    max: 2000.0                    # API 有网络延迟，绝对上限预声明放宽（本地 embedding 无此开销）

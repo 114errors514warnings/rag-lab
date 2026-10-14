@@ -65,6 +65,7 @@ docs/
 | E01 · 解析器 | ✅ | [`../reports/E/E01/`](../reports/E/E01/) |
 | E02 · 切块参数 | ✅ | [`../reports/E/E02/`](../reports/E/E02/) |
 | E03 · 符号级切块 | ❌ 未通过（3 次尝试） | [`../reports/E/E03/`](../reports/E/E03/) |
-| E04–E12 | ⬜ 未做 | — |
+| E04 · Embedding | ✅（显著性存疑） | [`../reports/E/E04/`](../reports/E/E04/) |
+| E05–E12 | ⬜ 未做 | — |
 
 > 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。
