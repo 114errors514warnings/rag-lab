@@ -5,7 +5,7 @@
 - 状态：⚠️ **未达标**（3 次测试后记录原因，按协议进入下一阶段）
 - 日期：2026-10-11
 - 架构说明：[`stage-S3-architecture.md`](stage-S3-architecture.md)
-- 架构图（Archify）：`../../.archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html`
+- 架构图（Archify）：`../../../../.archify/architecture-s3-retrieval-20261011-043000/s3-retrieval-architecture.html`
 
 ## 1. 目标
 BM25、Dense+Sparse Hybrid（RRF）、Cross-Encoder/API Rerank、Query Rewrite/Multi-query；

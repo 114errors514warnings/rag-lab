@@ -22,10 +22,14 @@ docs/
     stage-gates.md           #   固定测试方法说明
     records-convention.md    #   本文件：记录约定与索引
   reports/                   # 逐轮次报告（按实验轮次 R0–R3 分阶段）
+    README.md                #   报告总索引
     R0/                      #   R0 · 平台化基线
       round-0.md
       diagrams/round-0.architecture.{json,html}
-    R1/  R2/  R3/            #   后续轮次，待补
+    R1/                      #   R1 · 解析/切块/召回（进行中）
+      round-1.md
+      E01/ E02/ E03/ S2/ S3/ #     每阶段一夹：stage-<id>-report.md + -architecture.md
+    R2/  R3/                 #   后续轮次
 ```
 
 > 代码（`rag_engine/` `rag_eval/` `rag_lab/` `scripts/` `tests/` `configs/` `data/`）

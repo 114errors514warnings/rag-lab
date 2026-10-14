@@ -1,7 +1,7 @@
 # rag-lab · S2 架构说明 · 文档处理与增量索引
 
 > 配套报告：[`stage-S2-report.md`](stage-S2-report.md)
-> 架构图（Archify，全部闸门通过）：`../../.archify/architecture-s2-index-20261011-040000/s2-index-architecture.html`
+> 架构图（Archify，全部闸门通过）：`../../../../.archify/architecture-s2-index-20261011-040000/s2-index-architecture.html`
 
 ## 1. 组件与职责
 

@@ -15,7 +15,7 @@
   - 每阶段在 `configs/E0x.yaml` 里**预声明 gates**（`max` 绝对上限 / `min_delta` 提升 / `max_delta` 容忍回退）。
 - **A/B 配对**：自动输出逐题配对 + bootstrap 95% CI（跨 0 记"证据不足"）。
 - **产物**：`reports/{run_id}/{metrics.json,cases.jsonl,errors.csv,comparison.md}`、`traces/{run_id}.jsonl`；
-  阶段文档 `docs/reports/R{n}/stage-E0x-{report,architecture}.md`；重要阶段配 Archify 架构图。
+  阶段文档 `docs/reports/R{n}/<阶段>/stage-<阶段>-{report,architecture}.md`；重要阶段配 Archify 架构图。
 - **记录**：`docs/reports/R{n}/round-{n}.md` 不可变快照；历史只追加不改写（见统一开发准则）。
 
 ## 1. R1（E01–E05 · 解析 / 切块 / 召回）

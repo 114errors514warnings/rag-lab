@@ -32,7 +32,7 @@
 | `index/vector_store.py`（扩展） | `remove_doc_ids`：仅删行，其余行向量逐字节不变 |
 
 - L1：新增增量索引、元数据过滤断言；L2 回归门禁 PASS（`error_rate=0`，`citation_missing_rate` 不退化）。
-- **后续变更**：清洗曾导致行号错位（`recall@5` 假性降到 0.7407），已改为**保持行数不变**的清洗，复测回到 `0.8148`。详见 `stage-S2-report.md` §9。
+- **后续变更**：清洗曾导致行号错位（`recall@5` 假性降到 0.7407），已改为**保持行数不变**的清洗，复测回到 `0.8148`。详见 `S2/stage-S2-report.md` §9。
 
 ### S3 · 检索质量优化（✅，经修复后达标）
 
@@ -45,7 +45,7 @@
 | `retrieve/rewrite.py` | `rewrite` / `multi_query`（中→英术语扩展） |
 
 - **首轮 3 次未达标**（`mrr Δ<0.10`）：基线在该小套件上已接近上限、且 `retrieval_v1` 与真实 kb 语料不对齐。
-- **修复后达标**：扩术语表 + IDF 重排 + 多查询融合 → `demo_multi` 系统 `mrr 0.7417→0.9667`、`recall@3 0.85→0.975`，exit 0。详见 `stage-S3-report.md` §8。
+- **修复后达标**：扩术语表 + IDF 重排 + 多查询融合 → `demo_multi` 系统 `mrr 0.7417→0.9667`、`recall@3 0.85→0.975`，exit 0。详见 `S3/stage-S3-report.md` §8。
 
 ## 2. 实验侧交付（E01 / E02 / E03）
 
@@ -75,7 +75,7 @@
 
 1. **E03 未通过（阻塞 R1 收尾）**
    - 根因（实测）：符号块只覆盖函数/类/方法体，**丢失模块级区域**（imports / docstring / 常量 / 顶层语句），落在这些行的 `gold_evidence` 无法被检索。
-   - 修法（见 `stage-E03-report.md` §5）：为代码文件补**"模块剩余块"**（`meta.kind="module"`），或采用 **定长 ∪ 符号** 并集；修后复测并转绿。
+   - 修法（见 `E03/stage-E03-report.md` §5）：为代码文件补**"模块剩余块"**（`meta.kind="module"`），或采用 **定长 ∪ 符号** 并集；修后复测并转绿。
 2. **`retrieval_v1` 与真实 kb 语料不对齐**：其 `relevant_chunk_ids` 指向 demo 语料，直接跑真实 `my_pipeline` 时 `mrr=0`。S3 已用 `demo_*` 系统使对比成立；根治在 **S6 扩充/重标定检索套件**。
 
 ## 6. 边界（本轮未做）
@@ -113,7 +113,7 @@ python scripts/run_eval.py --config configs/E03.yaml --baseline <E02 run_id>
 
 ### 2026-10-14 · E03 修复尝试（模块剩余块）
 
-按 `stage-E03-report.md` §5 补了"模块剩余块"（`kind="module"`）。复测：`recall@5 0.5926→0.8148`（回到 E00 定长水平），
+按 `E03/stage-E03-report.md` §5 补了"模块剩余块"（`kind="module"`）。复测：`recall@5 0.5926→0.8148`（回到 E00 定长水平），
 但相对 E02(512/80) 仍 `recall@5 −0.0371`、`mrr@5 −0.0216`，**门禁仍 FAIL**（逐题仅差 1 题：少覆盖 A13/A18，多覆盖 B06）。
 根因：覆盖式 `recall@5` 对多证据题偏好更粗的块，符号块粒度更细。L1 94 passed。
 待决策方案见该报告 §8（并集 / 按预算合并 / 保持未达标先推进 E04–E05）。

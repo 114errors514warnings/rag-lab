@@ -2,9 +2,10 @@
 
 状态：🟡 进行中（S4 已完成）。
 
-- 阶段文档（每阶段两份）：
-  - S4 报告：`stage-S4-report.md` ｜ S4 架构说明：`stage-S4-architecture.md`
+| 阶段 | 报告 | 架构说明 |
+|---|---|---|
+| S4 · Context Engineering | [`S4/stage-S4-report.md`](S4/stage-S4-report.md) | [`S4/stage-S4-architecture.md`](S4/stage-S4-architecture.md) |
+
+- 覆盖实验：E06 Rerank、E07 Query Rewrite、E08 上下文扩展、E09 Token Budget / 压缩。
 - 对应旧计划：阶段三后半 + 阶段四。
 - 约定与模板见 [`../../guide/records-convention.md`](../../guide/records-convention.md)。
-
-> 本文件为索引；轮次完成后由 `round-2.md` 取代索引位置。
