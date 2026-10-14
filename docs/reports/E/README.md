@@ -12,8 +12,10 @@ E 计划 = 在系统上做**单变量实验**，量化归因、优化质量/成�
 | E02 | 切块参数（512/80 最优） | ✅ 通过 | [`E02/`](E02/) |
 | E03 | 符号级切块 | ❌ **未通过**（3 次尝试） | [`E03/`](E03/) |
 | E04 | Embedding（SiliconFlow `BAAI/bge-m3`） | ✅ 通过（显著性存疑） | [`E04/`](E04/) |
+| E04b | Embedding 模型对照（多语言 / 中文 / 英文 / Qwen3） | ⚠️ 部分未通过（Qwen3-0.6B PASS；zh/en FAIL） | [`E04b/`](E04b/) |
 | E05 | Dense / BM25 / Hybrid 对照 | ⚠️ **门禁未通过**（对照已完成；Dense 最优，BM25/Hybrid 的 recall FAIL） | [`E05/`](E05/) |
 | E06 | Rerank + 拒答（`BAAI/bge-reranker-v2-m3`） | ✅ 通过（`no_answer` 0→1.0） | [`E06/`](E06/) |
+| E06b | Rerank 模型对照（Qwen3-Reranker） | ⚠️ 未通过（mrr 达标；拒答阈值不可跨模型迁移） | [`E06b/`](E06b/) |
 | E07–E12 | Rewrite / Parent-Child / Context / 增量 / 隔离 / Tool | ⬜ 未做 | — |
 
 - 命名：`E{nn}/stage-E{nn}-report.md` 与 `stage-E{nn}-architecture.md`。

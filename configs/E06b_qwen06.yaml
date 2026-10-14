@@ -1,0 +1,27 @@
+experiment_id: E06b_qwen06
+description: Rerank 模型对照 · Qwen/Qwen3-Reranker-0.6B（对照 E06 的 bge-reranker-v2-m3）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: Qwen/Qwen3-Reranker-0.6B
+  rerank_candidates: 20
+  min_relevance: 0.05
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  mrr@5:
+    max_delta: -0.01
+  no_answer_accuracy:
+    min_delta: 0.0
+  p95_latency_ms:
+    max: 4000.0

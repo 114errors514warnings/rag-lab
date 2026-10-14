@@ -78,7 +78,7 @@ def _make_retriever(config: EngineConfig, embedder, store):
     factories = {
         "lexical": lambda: LexicalReranker(top_n=config.rerank_candidates),
         "idf": lambda: IdfReranker(top_n=config.rerank_candidates),
-        "siliconflow": lambda: SiliconFlowReranker(top_n=config.rerank_candidates),
+        "siliconflow": lambda: SiliconFlowReranker(model=config.rerank_model, top_n=config.rerank_candidates),
     }
     if kind not in factories:
         raise ValueError(f"未知 rerank：{kind}")

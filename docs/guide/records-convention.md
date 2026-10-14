@@ -66,8 +66,10 @@ docs/
 | E02 · 切块参数 | ✅ | [`../reports/E/E02/`](../reports/E/E02/) |
 | E03 · 符号级切块 | ❌ 未通过（3 次尝试） | [`../reports/E/E03/`](../reports/E/E03/) |
 | E04 · Embedding | ✅（显著性存疑） | [`../reports/E/E04/`](../reports/E/E04/) |
+| E04b · Embedding 模型对照 | ⚠️ 部分未通过（Qwen3 PASS；zh/en FAIL） | [`../reports/E/E04b/`](../reports/E/E04b/) |
 | E05 · 检索策略对照 | ⚠️ 门禁未通过（Dense 最优） | [`../reports/E/E05/`](../reports/E/E05/) |
 | E06 · Rerank + 拒答 | ✅ 通过（no_answer 0→1.0） | [`../reports/E/E06/`](../reports/E/E06/) |
+| E06b · Rerank 模型对照 | ⚠️ 未通过（拒答阈值不可迁移） | [`../reports/E/E06b/`](../reports/E/E06b/) |
 | E07–E12 | ⬜ 未做 | — |
 
 > 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。

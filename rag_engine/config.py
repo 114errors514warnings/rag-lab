@@ -35,6 +35,8 @@ class EngineConfig:
     retrieval: str = "dense"
     #: 重排：none（默认）| lexical | idf | siliconflow
     rerank: str = "none"
+    #: 重排模型（rerank=siliconflow 时使用）
+    rerank_model: str = "BAAI/bge-reranker-v2-m3"
     #: 重排候选数（先召回该数量，再重排到 top_k）
     rerank_candidates: int = 50
     #: 拒答阈值：dense=余弦；rerank=rerank 分数（bm25/hybrid 无重排时不使用）

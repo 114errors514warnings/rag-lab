@@ -1,0 +1,24 @@
+experiment_id: E04b_en
+description: Embedding 模型对照 · 英文强 BAAI/bge-large-en-v1.5（"错配对照"：中文查询 × 英文模型）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-large-en-v1.5
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    max_delta: -0.02
+  mrr@5:
+    max_delta: -0.02
+  p95_latency_ms:
+    max: 2500.0

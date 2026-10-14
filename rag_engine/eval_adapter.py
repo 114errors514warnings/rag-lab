@@ -39,7 +39,10 @@ class MyPipeline:
         parts = [emb, cfg.chunking, getattr(cfg, "retrieval", "dense")]
         rerank = getattr(cfg, "rerank", "none")
         if rerank != "none":
-            parts.append(f"rerank:{rerank}")
+            tag = f"rerank:{rerank}"
+            if rerank == "siliconflow":
+                tag += f":{cfg.rerank_model}"
+            parts.append(tag)
         parts.append("extractive")
         return "rag_engine(" + " + ".join(parts) + ")"
 
