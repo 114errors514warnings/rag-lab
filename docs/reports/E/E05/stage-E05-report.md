@@ -1,7 +1,7 @@
 # E05 阶段报告 · 检索策略对照（Dense / BM25 / Hybrid）
 
 - 实验：E05（E 计划）
-- 状态：✅ 对照完成 —— **结论：Dense 最优**；BM25 / Hybrid 未过召回门禁
+- 状态：⚠️ **门禁未通过**（对照实验已完成）—— 结论：Dense 最优；`E05_bm25` / `E05_hybrid` 的 `recall@5` 未过 `max_delta -0.02`（退出码 1）；仅 `E05_dense` 作为基线通过
 - 日期：2026-10-14
 - 配置：`configs/E05_dense.yaml` · `configs/E05_bm25.yaml` · `configs/E05_hybrid.yaml`
 - 基座：SiliconFlow `BAAI/bge-m3`（512/80，同 E04）；主变量 = `retrieval`

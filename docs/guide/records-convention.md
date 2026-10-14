@@ -66,7 +66,7 @@ docs/
 | E02 · 切块参数 | ✅ | [`../reports/E/E02/`](../reports/E/E02/) |
 | E03 · 符号级切块 | ❌ 未通过（3 次尝试） | [`../reports/E/E03/`](../reports/E/E03/) |
 | E04 · Embedding | ✅（显著性存疑） | [`../reports/E/E04/`](../reports/E/E04/) |
-| E05 · 检索策略对照 | ✅ 完成（Dense 最优） | [`../reports/E/E05/`](../reports/E/E05/) |
+| E05 · 检索策略对照 | ⚠️ 门禁未通过（Dense 最优） | [`../reports/E/E05/`](../reports/E/E05/) |
 | E06 · Rerank + 拒答 | ✅ 通过（no_answer 0→1.0） | [`../reports/E/E06/`](../reports/E/E06/) |
 | E07–E12 | ⬜ 未做 | — |
 
