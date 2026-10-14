@@ -117,3 +117,9 @@ python scripts/run_eval.py --config configs/E03.yaml --baseline <E02 run_id>
 但相对 E02(512/80) 仍 `recall@5 −0.0371`、`mrr@5 −0.0216`，**门禁仍 FAIL**（逐题仅差 1 题：少覆盖 A13/A18，多覆盖 B06）。
 根因：覆盖式 `recall@5` 对多证据题偏好更粗的块，符号块粒度更细。L1 94 passed。
 待决策方案见该报告 §8（并集 / 按预算合并 / 保持未达标先推进 E04–E05）。
+
+### 2026-10-14 · E03 尝试 3（符号 ∪ 非冗余定长）→ 仍未达标
+
+按方案 (A) 实现 `chunking=symbol_union`（`configs/E03_union.yaml`）。复测：`recall@5=0.7037`（−0.1481，**FAIL**）、
+`mrr@5=0.7870`（PASS）、`p95=0.395`（PASS）；L1 **96 passed**。粗粒度定长块成为干扰、把正确符号块挤出 top-5。
+**3 次尝试均未超过 E02(0.8519)，E03 记为未达标**；`symbol`/`symbol_union` 作为可选模式保留，R1 按计划推进 E05。

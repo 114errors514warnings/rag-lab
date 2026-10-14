@@ -113,3 +113,31 @@ def chunk_documents_symbol(docs: list[Document], size: int = 400, overlap: int =
         symbol_chunks = chunk_document_symbols(doc)
         out.extend(symbol_chunks if symbol_chunks else chunk_document(doc, size=size, overlap=overlap))
     return out
+
+
+def chunk_documents_symbol_union(docs: list[Document], size: int = 400, overlap: int = 80) -> list[Chunk]:
+    """尝试 3：符号（含模块）块 ∪ **非冗余**定长块。
+
+    定长块补齐"符号块较细、难以一次覆盖多段证据"的缺口；若某个定长块的行区间被**任一**
+    符号/模块块完整包含，则视为冗余丢弃。定长块 id 加 ``F`` 前缀，避免与符号块
+    ``{doc_id}:{seq:04d}`` 冲突。非代码文件仍只走定长。
+    """
+    out: list[Chunk] = []
+    for doc in docs:
+        symbol_chunks = chunk_document_symbols(doc)
+        if not symbol_chunks:
+            out.extend(chunk_document(doc, size=size, overlap=overlap))
+            continue
+        spans = [(c.meta["start"], c.meta["end"]) for c in symbol_chunks]
+        kept: list[Chunk] = []
+        for chunk in chunk_document(doc, size=size, overlap=overlap):
+            start, end = chunk.meta["start"], chunk.meta["end"]
+            if any(s <= start and end <= e for s, e in spans):
+                continue  # 已被某个符号/模块块完整覆盖 → 冗余
+            kept.append(chunk)
+        for i, chunk in enumerate(kept):
+            chunk.chunk_id = f"{doc.doc_id}:F{i:04d}"
+            chunk.meta["order"] = i
+        out.extend(symbol_chunks)
+        out.extend(kept)
+    return out

@@ -1,0 +1,22 @@
+experiment_id: E03_union
+description: E03 尝试3：符号(含模块) ∪ 非冗余定长块 —— 对照 E02 定长(512/80)
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: symbol_union
+  embed_provider: hashing
+  embed_dim: 1024
+  top_k: 5
+  min_relevance: 0.0
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  recall@5:
+    max_delta: -0.01               # 整体召回不得回退（含符号结构 + 定长覆盖）
+  mrr@5:
+    max_delta: -0.01               # 排序护栏
+  p95_latency_ms:
+    max: 500.0

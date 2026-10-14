@@ -87,3 +87,26 @@ def test_all_nonempty_source_lines_are_covered() -> None:
     missing = [n for n in range(1, len(lines) + 1) if lines[n - 1].strip() and n not in covered]
     assert not missing, f"存在未被覆盖的非空行：{missing}"
 
+
+# --- E03 尝试 3：符号 ∪ 非冗余定长 ---
+
+def test_union_has_unique_ids_and_keeps_fixed() -> None:
+    from rag_engine.ingest.symbol_chunker import chunk_documents_symbol_union
+
+    chunks = chunk_documents_symbol_union([_doc(PY)], size=400, overlap=80)
+    ids = [c.chunk_id for c in chunks]
+    assert len(ids) == len(set(ids)), "chunk_id 必须唯一（符号块与定长块命名空间分离）"
+    kinds = {c.meta.get("kind") for c in chunks}
+    assert "module" in kinds  # 模块剩余块仍在
+    assert any(cid.endswith(":F0000") for cid in ids)  # 非冗余定长块被保留
+
+
+def test_union_drops_redundant_fixed_when_fully_contained() -> None:
+    from rag_engine.ingest.symbol_chunker import chunk_documents_symbol_union
+
+    # 一个只有单个函数的极短文件：定长块 1 块且被该函数块完整包含 → 不应保留 F 块
+    text = "def only():\n    return 1"
+    chunks = chunk_documents_symbol_union([_doc(text)], size=400, overlap=80)
+    assert not any(c.chunk_id.endswith(":F0000") for c in chunks)
+
+

@@ -102,3 +102,37 @@ L1：`python -m pytest -q` → **94 passed**。较修复前 `recall@5 0.5926→0
 - (B) **符号块按 size 预算合并相邻块**（含模块块）：得到"符号对齐但更粗"的块；
 - (C) 保持**未达标**记录，先推进 E04/E05，E03 待有更合适判定口径时复核。
 
+---
+
+## 9. 后续变更（2026-10-14 · 尝试 3：符号 ∪ 非冗余定长）
+
+> 按《实践项目合集·统一开发准则》第 2 条：历史报告**只追加、不改写**。以上正文保持原样。
+
+**触发原因**：执行 §8 待决策方案 (A)。
+
+**改动**：
+- `rag_engine/ingest/symbol_chunker.py`：新增 `chunk_documents_symbol_union`——符号（含模块）块 ∪ 非冗余定长块；
+  定长块 id 加 `F` 前缀（`{doc_id}:F{seq:04d}`）避免与符号块冲突；被**任一**符号/模块块完整包含的定长块视为冗余丢弃。
+- `rag_engine/pipeline.py`：新增 `chunking = symbol_union` 分支。
+- `configs/E03_union.yaml`：尝试 3 配置（其余同 E02）。
+- `tests/test_symbol_chunking.py`：新增 2 项 L1（并集 id 唯一且保留定长块；完全包含时丢弃冗余定长块）。
+
+**复测**（`--config configs/E03_union.yaml --baseline <E02 run>`）：
+
+| 门禁 | 基线(E02) | 本次(E03_union) | Δ | 判定 |
+|---|---|---|---|---|
+| `recall@5`（主） | 0.8519 | 0.7037 | **−0.1481** | **FAIL** |
+| `mrr@5`（护栏） | 0.7914 | 0.7870 | −0.0044 | PASS |
+| `p95_latency_ms` | — | 0.395 | — | PASS |
+
+L1：`python -m pytest -q` → **96 passed**。
+
+**归因**：并入较多粗粒度定长块后，候选竞争加剧，部分题的正确符号/模块块被挤出 top-5，
+覆盖式 `recall@5` 反降；`mrr` 反而小幅回升（定长块把部分证据排到更前）。
+
+**结论（3 次尝试后）**：`symbol`（0.5926）→ `symbol+module`（0.8148）→ `symbol_union`（0.7037），
+**均未超过 E02 定长 512 的 0.8519**。按协议"3 次未通过则记录原因并进入下一阶段"，
+E03 记为**未达标**；`symbol` 与 `symbol_union` 作为可选 `chunking` 模式保留（结构化价值），
+R1 按计划推进 **E05**（BM25/Hybrid + 拒答）。
+
+

@@ -65,6 +65,10 @@ class RAGPipeline:
             from .ingest.symbol_chunker import chunk_documents_symbol
 
             chunks = chunk_documents_symbol(docs, size=config.chunk_size, overlap=config.chunk_overlap)
+        elif getattr(config, "chunking", "fixed") == "symbol_union":
+            from .ingest.symbol_chunker import chunk_documents_symbol_union
+
+            chunks = chunk_documents_symbol_union(docs, size=config.chunk_size, overlap=config.chunk_overlap)
         else:
             chunks = chunk_documents(docs, size=config.chunk_size, overlap=config.chunk_overlap)
         by_id = {doc.doc_id: doc for doc in docs}
