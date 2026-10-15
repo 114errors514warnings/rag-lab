@@ -1,0 +1,28 @@
+experiment_id: E09_budget200
+description: Context Budget = 200 tokens（ContextBuilder：去重 + 每文档≥1 + 预算裁剪；基座同 E08）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  context: builder
+  context_max_chunks: 10
+  context_budget_tokens: 200
+  generator: extractive
+  max_context_chunks: 10
+gates:
+  avg_prompt_tokens:
+    max: 2000.0
+  p95_latency_ms:
+    max: 4000.0

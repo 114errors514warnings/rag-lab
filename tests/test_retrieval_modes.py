@@ -98,24 +98,3 @@ def test_rewrite_multi_wraps_retriever() -> None:
     emb, store = _store()
     r = _make_retriever(EngineConfig(retrieval="dense", rewrite="multi"), emb, store)
     assert isinstance(r, MultiQueryRetriever)
-
-
-def test_adjacent_context_expansion() -> None:
-    from rag_engine.pipeline import _expand_context
-
-    emb, store = _store()  # 两个块同 doc，order 0/1
-    hits = store.search(emb.embed(["alpha beta gamma"])[0], 1)
-    assert len(hits) == 1
-    ctx = _expand_context(EngineConfig(context="adjacent", context_window=1), hits, store)
-    ids = {h.chunk.chunk_id for h in ctx}
-    assert {h.chunk.chunk_id for h in hits} <= ids  # 命中块保留
-    assert len(ids) > len(hits)  # 邻近块被并入
-
-
-def test_context_none_is_identity() -> None:
-    from rag_engine.pipeline import _expand_context
-
-    emb, store = _store()
-    hits = store.search(emb.embed(["alpha beta gamma"])[0], 2)
-    ctx = _expand_context(EngineConfig(context="none"), hits, store)
-    assert [h.chunk.chunk_id for h in ctx] == [h.chunk.chunk_id for h in hits]

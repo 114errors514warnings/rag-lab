@@ -175,11 +175,26 @@ class RAGPipeline:
         hits = self.retriever.retrieve(question, n, flt=flt)
         retrieved = hits[:k]
         if mode == "top_n":
-            context = hits[: self.config.context_max_chunks]
+            candidates = hits[: self.config.context_max_chunks]
         elif mode == "adjacent":
-            context = _expand_context(self.config, retrieved, self.store)[: self.config.context_max_chunks]
+            candidates = _expand_context(self.config, retrieved, self.store)[: self.config.context_max_chunks]
+        elif mode == "builder":
+            candidates = hits  # 全候选交 ContextBuilder 做去重/预算
         else:
-            context = retrieved
+            candidates = retrieved
+        if mode == "builder":
+            from dataclasses import replace as _replace
+
+            from .context.builder import ContextBuilder
+
+            built = ContextBuilder(max_tokens=self.config.context_budget_tokens or 1000).build(candidates)
+            by_id = {h.chunk.chunk_id: h for h in candidates}
+            context = [
+                Retrieved(chunk=_replace(by_id[s.chunk_id].chunk, text=s.text), score=s.score)
+                for s in built.segments if s.chunk_id in by_id
+            ]
+        else:
+            context = candidates
         gen: Generation = self.generator.generate(question, context)
         min_rel = self.config.min_relevance
         low = bool(min_rel) and (not retrieved or retrieved[0].score < min_rel)
