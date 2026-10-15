@@ -16,9 +16,9 @@
 | **实验平台 · M0** | ✅ `rag_lab/` + `scripts/`（快照 / Golden v2 / Trace / 配置驱动运行器 / 配对 bootstrap） |
 | 评测协议 v2 | ✅ 证据制（`gold_evidence` 行区间/symbol），新增 nDCG、证据覆盖、拒答、宏微平均 |
 | **E00 基线** | ✅ `recall@5=0.8148`、`trace=100%`（详见 `docs/reports/E/E00/` 与 `docs/reports/S/R0/round-0.md`） |
-| L1 功能测试 | ✅ `tests/`（92 项，`python -m pytest`） |
+| L1 功能测试 | ✅ `tests/`（116 项，`python -m pytest`） |
 | **系统本体 · 阶段二~七（S2–S7）** | ✅ 已全部达标（S3 经"查询改写+IDF 重排"达标；详见 `docs/reports/S/`） |
-| 实验线 E01–E12 | 🟡 E00/E01/E02 ✅；**E03 未通过（待修）**；E04–E12 ⬜（计划见 `docs/guide/experiment-plan-E01-E12.md`） |
+| 实验线 E00–E12 | ✅ **全部执行完成**（9 通过 / 4 未通过 / 1 部分；指标口径见 `docs/reports/E/metrics-glossary.md`；总结见 `docs/reports/E/summary.md`） |
 | **Agent Runtime 线 A01–A10** | ⬜ 规划已归档（`docs/guide/agent-runtime-plan-A01-A10.md`）；综合路线图见 `docs/guide/roadmap-merged.md` |
 
 ## 目录结构
@@ -76,24 +76,23 @@ python scripts/run_eval.py --config configs/E0x.yaml --baseline <E00_run_id>
 
 ```
 RAG 系统线 S1–S7（✅ 已达标） ┐
-RAG 实验线 E00–E02 ✅ / E03 ❌ / E04–E12 ⬜ ┴─▶ Project Knowledge Engine（✅ 含 MCP 工具面）
+RAG 实验线 E00–E12（✅ 已执行完成）┴─▶ Project Knowledge Engine（✅ 含 MCP 工具面）
                                               │
                                               ▼
-                       Tool Calling / Tool Executor（❌ 本工作区未找到 → A 线前置缺口）
+                       Tool Calling / Tool Executor（agent-runtime，关联集内，已检出）
                                               │
                                               ▼
-                       Agent Runtime A01–A10（⬜ 0/10，有新计划）
+                       Agent Runtime A01–A10（⬜ 0/10）
 ```
 
 - 新计划（A01–A10）：`docs/guide/agent-runtime-plan-A01-A10.md`（原文 `docs/guide/assets/…docx`）
 - 综合路线图（S/E/T/A 合流、现状盘点、里程碑、复用映射、下一步）：`docs/guide/roadmap-merged.md`
+- **E 线总结**（结论 / 负面结果 / 开放项）：`docs/reports/E/summary.md`
 
-## 下一步（先闭环 RAG 实验线）
+## 下一步（启动 A 线）
 
-> 依据 `docs/guide/roadmap-merged.md` §5：E 线是 Agent 线 A07（Memory + RAG）的前置，**先完成 E 线**。
-> 记录约定见 `docs/guide/records-convention.md`；S 计划轮次快照见 `docs/reports/S/R1/round-1.md`。
+> E 线已收官（`docs/reports/E/summary.md`）；综合路线图见 `docs/guide/roadmap-merged.md`。
 
-1. **修复 E03**（当前唯一未闭环实验）：为代码文件补"模块剩余块"（`kind="module"`）或采用定长∪符号并集，复测转绿（详见 `docs/reports/E/E03/stage-E03-report.md` §5）。
-2. **E05 优先于 E04**：接入 `system.retrieval`（Dense / BM25 / Hybrid）+ `min_relevance` 拒答，不依赖外部模型，顺带修 `no_answer_accuracy=0`。
-3. **E04**：待定"本地模型 / API / 暂保持离线（记 `BASELINE`）"后再做。
-4. E 线收敛后启动 T/A 线；`agent-runtime`（关联集内独立仓库）**本工作区未检出**，需先确认其位置或决定承载方式。
+1. 在 `agent-runtime`（关联集内独立仓库，已本地检出）按手册推进 **A01–A10**：M1（A01–A03）→ M2（A04–A06）→ M3（A07–A09）→ M4（A10）；其前置 Tool Calling / Executor 见该仓库自身文档。
+2. 复用本仓库的评测纪律（固定套件 / 预声明门禁 / run_id 报告）与 RAG Tool 接口（`search_project`/`get_symbol`/`read_context`）。
+3. E 线遗留开放项见 `docs/reports/E/summary.md` §4（口径复核、两套代码语料统一、Docker、LLM 注入防护）。
