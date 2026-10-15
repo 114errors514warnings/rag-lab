@@ -23,15 +23,15 @@
 - **L2**：`python scripts/run_eval.py --config configs/E01.yaml --baseline <E00 run_id>`
   - 门禁：`recall@5 max_delta -0.01`、`context_evidence_coverage max_delta -0.01`、`p95_latency_ms max 500`。
 
-## 4. 结果
-| 门禁 | 基线 | 本次 | Δ | 判定 |
-|---|---|---|---|---|
-| `recall@5` | 0.8148 | 0.8148 | +0.0000 | **PASS** |
-| `context_evidence_coverage` | 0.8148 | 0.8148 | +0.0000 | **PASS** |
-| `p95_latency_ms` | — | 0.25 | — | **PASS** |
+## 4. 结果（逐指标：含义 / 标准 / 实测 / 结论）
 
-退出码 0。**1 次通过**（首跑时曾误把 E 线不产出的 `error_rate`/`trace_completeness` 写进门禁 → 记为 `NO_GATE`；
-已改为 E 线实际指标后复跑全 PASS）。
+| 指标 | 它衡量什么 | 标准 | 基线（E00） | 本次（E01） | 结论 |
+|---|---|---|---|---|---|
+| `recall@5` | 覆盖式召回：**至少一组充分证据**落入检索 top-5 的题数 ÷ 可答题数 | 不得回退超过 0.01 | 0.8148 | 0.8148 | ✅ 通过 |
+| `context_evidence_coverage` | 送进生成的**上下文**覆盖全部必要证据的题数 ÷ 可答题数 | 不得回退超过 0.01 | 0.8148 | 0.8148 | ✅ 通过 |
+| `p95_latency_ms` | 端到端第 95 百分位耗时 | ≤ 500 ms | — | 0.25 ms | ✅ 通过 |
+
+退出码 0，**通过**（首跑把 E 线不产出的 `error_rate`/`trace_completeness` 误当门禁 → `NO_GATE`；改用 E 线实际指标后复跑全通过）。
 
 ## 5. 边界与不做
 - 本阶段**不改系统行为**（与 E00 同参数），只建立解析口径的显式锚点；因此 `config_hash` 与 E00 相同（`483d64cf78e9`）。

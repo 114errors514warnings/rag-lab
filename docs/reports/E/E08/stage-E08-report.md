@@ -18,19 +18,18 @@
 - **L2**：`python scripts/run_eval.py --config configs/E08_context.yaml`（无 `--baseline`）
   - 门禁（绝对）：`avg_prompt_tokens max 2000`、`p95_latency_ms max 4000`。
 
-## 3. 结果
+## 3. 结果（逐指标：含义 / 标准 / 实测 / 结论）
 
-| 指标 | 参考（E06/E07） | 本次 E08 | 说明 |
-|---|---|---|---|
-| `context_evidence_coverage` | 0.9630 | **1.0000** | 上下文覆盖全部 27 可答题（含多证据题） |
-| `recall@5` | 0.9630 | 0.9630 | 检索 top-5 不变 |
-| `mrr@5` | 0.8728 | 0.8728 | 不变 |
-| `ndcg@5` | 0.9484 | 0.9439 | 近似 |
-| `avg_prompt_tokens`（护栏 ≤2000） | — | 621.75 | PASS |
-| `p95_latency_ms`（护栏 ≤4000） | — | 2872.7 | PASS（含网络，方差大） |
-| `no_answer_accuracy` | 1.0 | 1.0 | 不变 |
+| 指标 | 它衡量什么 | 标准 | 参考（E06/E07） | 本次（E08，context=top_n） | 结论 |
+|---|---|---|---|---|---|
+| `context_evidence_coverage` | 送进生成的**上下文**覆盖全部必要证据的题数 ÷ 可答题数 | 观察项（无基线） | 0.9630 | 1.0000 | ⬆ 提升（覆盖全部 27 题，含多证据题） |
+| `avg_prompt_tokens`（护栏） | 送进生成的上下文平均 token 数 | ≤ 2000 | — | 621.75 | ✅ 通过 |
+| `p95_latency_ms`（护栏） | 端到端第 95 百分位耗时 | ≤ 4000 ms | — | 2872.7 ms | ✅ 通过 |
+| `recall@5` | 覆盖式召回（检索 top-5） | 观察项 | 0.9630 | 0.9630 | 不变 |
+| `mrr@5` | 首个命中证据的平均倒数排名 | 观察项 | 0.8728 | 0.8728 | 不变 |
+| `no_answer_accuracy` | 无答案题正确拒答比例 | 观察项 | 1.0 | 1.0 | 不变 |
 
-分组 `context_evidence_coverage`：symbol/dependency/literal/semantic **全 1.0**。**退出码 0。**
+分组 `context_evidence_coverage`：symbol / dependency / literal / semantic **全 1.0**。**退出码 0，通过。**
 
 ## 4. 结论
 把 **top-10 候选全部作为上下文**，使 `context_evidence_coverage` **0.9630 → 1.0**——**补齐了此前唯一未覆盖的多证据题 `QA18`**

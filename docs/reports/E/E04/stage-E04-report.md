@@ -19,19 +19,17 @@
 - **L2**：`python scripts/run_eval.py --config configs/E04.yaml --baseline <E02 run>`
   - 门禁：`recall@5 min_delta 0`；`mrr@5 max_delta -0.01`；`p95_latency_ms max 2000`（API 含网络延迟，绝对上限预声明）。
 
-## 3. 结果
+## 3. 结果（逐指标：含义 / 标准 / 实测 / 结论）
 
-| 门禁 / 指标 | 基线 E02 | 本次 E04 | Δ | 判定 |
-|---|---|---|---|---|
-| `recall@5`（主） | 0.8519 | **0.9630** | **+0.1111** | **PASS** |
-| `mrr@5`（护栏） | 0.7914 | 0.7833 | −0.0081 | PASS |
-| `p95_latency_ms`（护栏） | — | 301.073 | — | PASS |
+| 指标 | 它衡量什么 | 标准 | 基线（E02，hashing） | 本次（E04，bge-m3） | 结论 |
+|---|---|---|---|---|---|
+| `recall@5` | 覆盖式召回：充分证据落入检索 top-5 的题数 ÷ 可答题数 | 相对 E02 **不得回退** | 0.8519 | 0.9630 | ✅ 通过（+0.1111，提升） |
+| `mrr@5` | 首个命中证据的平均倒数排名（越大越靠前） | 回退 ≤ 0.01 | 0.7914 | 0.7833 | ✅ 通过（−0.0081） |
+| `p95_latency_ms` | 端到端第 95 百分位耗时 | ≤ 2000 ms（API 含网络，预声明放宽） | — | 301.1 ms | ✅ 通过 |
 
-其它观测指标：`ndcg@5` 0.8921→**0.9331**、`context_evidence_coverage` **0.9630**、`answer_accuracy` 0.6875→**0.8125**、
-`macro_recall@5` 0.9722、`p95=301ms`、`avg=108ms`；`no_answer_accuracy` 仍 **0.0**。
-分组召回：`symbol` 1.0 / `dependency` 1.0 / `literal` 1.0 / `semantic` 0.8889。
+> 观测项（未设门禁）：`ndcg@5` 0.8921→0.9331、`context_evidence_coverage` 0.9630、`answer_accuracy` 0.6875→0.8125、`no_answer_accuracy` 仍 0.0；分组召回 symbol / dependency / literal 均 1.0、semantic 0.8889。
 
-**退出码 0。门禁三项全 PASS。**
+**退出码 0，通过。**
 
 ## 4. 结论
 真实语义向量（`BAAI/bge-m3`）使**覆盖式召回 0.8519→0.963**，`ndcg`/`answer_accuracy` 同步上升，护栏（`mrr`/`p95`）未破线。

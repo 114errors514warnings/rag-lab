@@ -11,13 +11,21 @@
 ## 1. 目标
 比较 Rerank 模型：`bge-reranker-v2-m3`（现用）vs `Qwen3-Reranker-0.6B` / `4B`。
 
-## 2. 结果
+## 2. 结果（对照 bge-reranker；逐指标：含义 / 标准 / 实测 / 结论）
 
-| Rerank 模型 | `recall@5` | `mrr@5` | `ndcg@5` | `answer_accuracy` | `no_answer` | `p95(ms)` | 判定 |
-|---|---|---|---|---|---|---|---|
-| `BAAI/bge-reranker-v2-m3`（基线 E06） | 0.963 | 0.8728 | 0.9484 | 0.875 | **1.0** | 1122 | — |
-| `Qwen/Qwen3-Reranker-0.6B` | 0.963 | 0.8642 | 0.9687 | 0.906 | 0.6 | 765 | **FAIL**（`no_answer` 0.6<1.0） |
-| `Qwen/Qwen3-Reranker-4B` | 0.963 | **0.9259** | **0.9719** | 0.906 | 0.6 | 1068 | **FAIL**（`no_answer` 0.6<1.0） |
+**判定标准**：替代模型相对 `bge-reranker-v2-m3`：`mrr@5` 回退 ≤ 0.01、`no_answer_accuracy` 不得下降。
+
+| 指标 | 它衡量什么 | 标准 |
+|---|---|---|
+| `mrr@5` | 首个命中证据的平均倒数排名 | 回退 ≤ 0.01 |
+| `no_answer_accuracy` | 无答案题**正确拒答**的题数 ÷ 无答案题数 | 不得下降（基线 1.0） |
+| `p95_latency_ms` | 端到端第 95 百分位耗时 | ≤ 4000 ms |
+
+| Rerank 模型 | `recall@5` | `mrr@5` | `no_answer_accuracy` | `p95(ms)` | 结论 |
+|---|---|---|---|---|---|
+| `bge-reranker-v2-m3`（基线） | 0.963 | 0.8728 | 1.0 | 1122 | — |
+| `Qwen3-Reranker-0.6B` | 0.963 | 0.8642 ✅ | 0.6 ❌ | 765 | ❌ **FAIL**（`no_answer` 0.6 < 1.0） |
+| `Qwen3-Reranker-4B` | 0.963 | 0.9259 ✅ | 0.6 ❌ | 1068 | ❌ **FAIL**（`no_answer` 0.6 < 1.0） |
 
 ## 3. 结论
 1. **排序：`Qwen3-Reranker-4B` 最好**（`mrr@5=0.9259`，比 bge-reranker 高 **+0.0531**；`ndcg` 也最高）。

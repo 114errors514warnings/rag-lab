@@ -18,16 +18,17 @@
 - **L2**：`python scripts/run_eval.py --config configs/E06_rerank.yaml --baseline <E05_dense run>`
   - 门禁：`mrr@5 min_delta 0`、`no_answer_accuracy min_delta 0`、`p95_latency_ms max 4000`（含 embedding + rerank 两次 API）。
 
-## 3. 结果
+## 3. 结果（逐指标：含义 / 标准 / 实测 / 结论）
 
-| 门禁 / 指标 | 基线 E05_dense | 本次 E06 | Δ | 判定 |
-|---|---|---|---|---|
-| `mrr@5`（主） | 0.7833 | **0.8728** | **+0.0895** | **PASS** |
-| `no_answer_accuracy`（主） | 0.0 | **1.0** | **+1.0** | **PASS** |
-| `p95_latency_ms`（护栏） | 300.2 | 1121.7 | — | PASS |
+| 指标 | 它衡量什么 | 标准 | 基线（E05_dense） | 本次（E06，+rerank） | 结论 |
+|---|---|---|---|---|---|
+| `mrr@5`（主） | 首个命中证据的平均倒数排名（越大越靠前） | 相对基线**不得下降** | 0.7833 | 0.8728 | ✅ 通过（+0.0895，提升） |
+| `no_answer_accuracy`（主） | 无答案题被**正确拒答**的题数 ÷ 无答案题数 | 不得下降 | 0.0 | 1.0 | ✅ 通过（0→1.0，5/5） |
+| `p95_latency_ms`（护栏） | 端到端第 95 百分位耗时 | ≤ 4000 ms（两次 API） | 300.2 ms | 1121.7 ms | ✅ 通过 |
 
-其它：`recall@5` 0.963（**未变**）、`ndcg@5` 0.9331→**0.9484**、`context_evidence_coverage` 0.963、
-`answer_accuracy` 0.8125→**0.875**、`citation_support` 0.3333→0.2741。**退出码 0。**
+> 观测项：`recall@5` 0.963（未变）、`ndcg@5` 0.9331→0.9484、`context_evidence_coverage` 0.963、`answer_accuracy` 0.8125→0.875、`citation_support` 0.3333→0.2741。
+
+**退出码 0，通过。**
 
 ## 4. 结论
 - **Rerank 提升排序**：`mrr@5` +0.0895、`ndcg@5` +0.0153，且**召回不受影响**（0.963）。

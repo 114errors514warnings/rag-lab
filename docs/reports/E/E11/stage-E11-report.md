@@ -18,12 +18,17 @@
 - **L2**：`python scripts/run_eval.py --config configs/E11_{isolated,control}.yaml`
   - 门禁：`leakage_rate max 0`。
 
-## 3. 结果
+## 3. 结果（逐指标：含义 / 标准 / 实测 / 结论）
 
-| 系统 | `isolation` | `leakage_rate`（门禁=0） | `recall@5` | `no_answer` | 判定 |
+**判定标准**：隔离开启时 `leakage_rate` **必须 = 0**。
+
+| 指标 | 它衡量什么 | 标准 | isolation=on | isolation=off（负对照） | 结论 |
 |---|---|---|---|---|---|
-| E11_isolated | **on** | **0.0000** | 0.963 | 1.0 | **PASS** |
-| E11_control（负对照） | off | **0.0563** | 0.889 | 0.75 | **FAIL（预期）** |
+| `leakage_rate` | 检索结果里**不属于该用例项目**的块所占比例（串味率） | 必须 = 0 | 0.0 | 0.0563 | on ✅ 通过；off ❌ **FAIL**（如期） |
+| `recall@5` | 覆盖式召回（充分证据落入检索 top-5 的题占比） | 观察项 | 0.963 | 0.889 | — |
+| `no_answer_accuracy` | 无答案题被正确拒答的题数 ÷ 无答案题数 | 观察项 | 1.0 | 0.75 | — |
+
+> 负对照（关闭隔离）**预期 FAIL**，用来证明门禁确实能抓住泄漏。
 
 ## 4. 结论
 - 按 `case.project_id` 过滤检索 → **`leakage_rate = 0`**：跨项目提问（QD03/QD04）**只返回本项目内容**，不串味。
