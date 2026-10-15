@@ -1,0 +1,28 @@
+experiment_id: E08_context
+description: 上下文扩展（前 N 候选进上下文）；基座同 E06（多语言 Dense + Rerank + 拒答，无改写）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  context: top_n
+  context_window: 1
+  context_max_chunks: 10
+  generator: extractive
+  max_context_chunks: 10
+gates:
+  avg_prompt_tokens:
+    max: 2000.0              # Token 预算（绝对上限）
+  p95_latency_ms:
+    max: 4000.0

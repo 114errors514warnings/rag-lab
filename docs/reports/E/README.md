@@ -17,7 +17,8 @@ E 计划 = 在系统上做**单变量实验**，量化归因、优化质量/成�
 | E06 | Rerank + 拒答（`BAAI/bge-reranker-v2-m3`） | ✅ 通过（`no_answer` 0→1.0） | [`E06/`](E06/) |
 | E06b | Rerank 模型对照（Qwen3-Reranker） | ⚠️ 未通过（mrr 达标；拒答阈值不可跨模型迁移） | [`E06b/`](E06b/) |
 | E07 | Query Rewrite / Multi-query | ⚠️ 未通过（recall 持平；mrr 略降，落在方差内） | [`E07/`](E07/) |
-| E08–E12 | Parent-Child / Context / 增量 / 隔离 / Tool | ⬜ 未做 | — |
+| E08 | 上下文扩展（top-N 进上下文） | ✅ 通过（context_coverage 0.963→1.0） | [`E08/`](E08/) |
+| E09–E12 | Context Budget / 增量 / 隔离 / Tool | ⬜ 未做 | — |
 
 - 命名：`E{nn}/stage-E{nn}-report.md` 与 `stage-E{nn}-architecture.md`。
 - **S 计划（系统建造）在另一棵树**：[`../S/`](../S/)。

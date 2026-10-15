@@ -35,6 +35,8 @@ class CaseScore:
     citation_support: float | None
     latency_ms: float
     cost_usd: float
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
 
 
 def _units(ans) -> list[dict]:
@@ -42,6 +44,9 @@ def _units(ans) -> list[dict]:
 
 
 def _context_units(ans) -> list[dict]:
+    context = getattr(ans, "context", None)
+    if context:
+        return [{k: getattr(c, k) for k in UNIT_KEYS} for c in context]
     keep = set(ans.context_chunk_ids)
     return [{k: getattr(c, k) for k in UNIT_KEYS} for c in ans.retrieved if c.chunk_id in keep]
 
@@ -65,6 +70,7 @@ def score_case(case, ans, k: int) -> CaseScore:
             coverage=0.0, precision=0.0, mrr=0.0, ndcg=0.0, context_coverage=0.0,
             answer_accuracy=correct, no_answer_correct=correct, citation_support=None,
             latency_ms=base["latency_ms"], cost_usd=base["cost_usd"],
+            prompt_tokens=ans.prompt_tokens, completion_tokens=ans.completion_tokens,
             case_id=case.id, query_type=base["query_type"], split=case.split,
         )
 
@@ -82,9 +88,10 @@ def score_case(case, ans, k: int) -> CaseScore:
         return any(unit_matches_evidence(unit, e) for e in all_evidence)
 
     # Citation Support：引用单元中命中证据的比例（无引用记 0）
+    all_units = list(ans.retrieved) + list(getattr(ans, "context", None) or [])
     cite_units = [
         {k: getattr(c, k) for k in UNIT_KEYS}
-        for c in ans.retrieved if c.chunk_id in set(ans.citations)
+        for c in all_units if c.chunk_id in set(ans.citations)
     ]
     citation_support = (
         sum(1 for u in cite_units if matches(u)) / len(cite_units) if cite_units else 0.0
@@ -100,6 +107,7 @@ def score_case(case, ans, k: int) -> CaseScore:
         context_coverage=ctx_cov, answer_accuracy=answer_accuracy,
         no_answer_correct=None, citation_support=round(citation_support, 4),
         latency_ms=base["latency_ms"], cost_usd=base["cost_usd"],
+        prompt_tokens=ans.prompt_tokens, completion_tokens=ans.completion_tokens,
     )
 
 
@@ -125,6 +133,8 @@ def aggregate(scores: list[CaseScore], k: int) -> dict:
         "avg_latency_ms": round(mean_or_zero(latencies), 3),
         "p95_latency_ms": round(percentile(latencies, 0.95), 3),
         "cost_per_query_usd": round(mean_or_zero(costs), 8),
+        "avg_prompt_tokens": round(mean_or_zero([s.prompt_tokens for s in scores]), 2),
+        "avg_completion_tokens": round(mean_or_zero([s.completion_tokens for s in scores]), 2),
     }
 
     # 宏平均 + 分组

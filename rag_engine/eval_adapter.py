@@ -43,6 +43,8 @@ class MyPipeline:
             if rerank == "siliconflow":
                 tag += f":{cfg.rerank_model}"
             parts.append(tag)
+        if getattr(cfg, "context", "none") != "none":
+            parts.append(f"context:{cfg.context}")
         parts.append("extractive")
         return "rag_engine(" + " + ".join(parts) + ")"
 
@@ -60,20 +62,22 @@ class MyPipeline:
 
     def answer(self, case: EvalCase, k: int) -> SystemAnswer:
         result = self._ensure().answer(case.question, k=k, project_id=case.project_id)
+
+        def _rc(hit) -> RetrievedChunk:
+            return RetrievedChunk(
+                chunk_id=hit.chunk.chunk_id,
+                score=hit.score,
+                source=hit.chunk.meta.get("source"),
+                project_id=hit.chunk.meta.get("project_id"),
+                start_line=hit.chunk.meta.get("start_line"),
+                end_line=hit.chunk.meta.get("end_line"),
+                symbol=hit.chunk.meta.get("symbol"),
+            )
+
         return SystemAnswer(
             answer=result.answer,
-            retrieved=[
-                RetrievedChunk(
-                    chunk_id=hit.chunk.chunk_id,
-                    score=hit.score,
-                    source=hit.chunk.meta.get("source"),
-                    project_id=hit.chunk.meta.get("project_id"),
-                    start_line=hit.chunk.meta.get("start_line"),
-                    end_line=hit.chunk.meta.get("end_line"),
-                    symbol=hit.chunk.meta.get("symbol"),
-                )
-                for hit in result.retrieved
-            ],
+            retrieved=[_rc(h) for h in result.retrieved],
+            context=[_rc(h) for h in result.context],
             citations=result.citations,
             context_chunk_ids=result.context_chunk_ids,
             refused=result.refused,

@@ -71,6 +71,7 @@ docs/
 | E06 · Rerank + 拒答 | ✅ 通过（no_answer 0→1.0） | [`../reports/E/E06/`](../reports/E/E06/) |
 | E06b · Rerank 模型对照 | ⚠️ 未通过（拒答阈值不可迁移） | [`../reports/E/E06b/`](../reports/E/E06b/) |
 | E07 · Query Rewrite / Multi-query | ⚠️ 未通过（无增益） | [`../reports/E/E07/`](../reports/E/E07/) |
-| E08–E12 | ⬜ 未做 | — |
+| E08 · 上下文扩展 | ✅ 通过（context_coverage 0.963→1.0） | [`../reports/E/E08/`](../reports/E/E08/) |
+| E09–E12 | ⬜ 未做 | — |
 
 > 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。

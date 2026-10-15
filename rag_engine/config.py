@@ -43,6 +43,12 @@ class EngineConfig:
     rerank_candidates: int = 50
     #: 拒答阈值：dense=余弦；rerank=rerank 分数（bm25/hybrid 无重排时不使用）
     min_relevance: float = 0.0
+    #: 上下文扩展：none（默认）| adjacent（邻近块）| top_n（前 N 个候选进上下文）
+    context: str = "none"
+    #: 邻近半径（仅 context=adjacent）
+    context_window: int = 1
+    #: 送进生成的上下文块数上限
+    context_max_chunks: int = 10
 
     # --- 生成 ---
     generator: str = "extractive"  # extractive（离线默认）| openai

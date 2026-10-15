@@ -29,6 +29,8 @@ from .schema import Document, Retrieved
 class Answer:
     answer: str
     retrieved: list[Retrieved] = field(default_factory=list)
+    #: 送进生成的上下文（可能含邻近/扩展块；context==retrieved 时为同一批）
+    context: list[Retrieved] = field(default_factory=list)
     citations: list[str] = field(default_factory=list)
     context_chunk_ids: list[str] = field(default_factory=list)
     refused: bool = False
@@ -90,6 +92,37 @@ def _make_retriever(config: EngineConfig, embedder, store):
     return RerankedRetriever(base, factories[kind](), candidates=config.rerank_candidates)
 
 
+def _expand_context(config: EngineConfig, hits: list[Retrieved], store) -> list[Retrieved]:
+    """上下文扩展：``context=adjacent`` 时把检索命中的邻近块并入上下文。
+
+    用于"多证据题"——把相邻的切片一起喂给生成，提升 Context Evidence Coverage；
+    仅改**上下文**，不改 recall@k 的检索结果。
+    """
+    base = list(hits)
+    if getattr(config, "context", "none") != "adjacent" or not base:
+        return base
+    window = max(0, getattr(config, "context_window", 1))
+    cap = max(len(base), getattr(config, "context_max_chunks", 10))
+    by_doc: dict[str, list] = {}
+    for chunk in store.chunks:
+        by_doc.setdefault(chunk.doc_id, []).append(chunk)
+    for arr in by_doc.values():
+        arr.sort(key=lambda c: c.meta.get("order", 0))
+    chosen = list(base)
+    chosen_ids = {h.chunk.chunk_id for h in base}
+    for hit in base:
+        arr = by_doc.get(hit.chunk.doc_id, [])
+        idx = next((i for i, c in enumerate(arr) if c.chunk_id == hit.chunk.chunk_id), None)
+        if idx is None:
+            continue
+        for j in range(max(0, idx - window), min(len(arr), idx + window + 1)):
+            c = arr[j]
+            if c.chunk_id not in chosen_ids:
+                chosen.append(Retrieved(chunk=c, score=hit.score))
+                chosen_ids.add(c.chunk_id)
+    return chosen[:cap]
+
+
 class RAGPipeline:
     def __init__(self, config: EngineConfig, embedder, store, retriever, generator) -> None:
         self.config = config
@@ -137,25 +170,36 @@ class RAGPipeline:
         started = time.perf_counter()
         k = k or self.config.top_k
         flt = {"project_id": project_id} if project_id else None
-        hits = self.retriever.retrieve(question, k, flt=flt)
-        gen: Generation = self.generator.generate(question, hits)
+        mode = getattr(self.config, "context", "none")
+        n = max(k, self.config.context_max_chunks) if mode != "none" else k
+        hits = self.retriever.retrieve(question, n, flt=flt)
+        retrieved = hits[:k]
+        if mode == "top_n":
+            context = hits[: self.config.context_max_chunks]
+        elif mode == "adjacent":
+            context = _expand_context(self.config, retrieved, self.store)[: self.config.context_max_chunks]
+        else:
+            context = retrieved
+        gen: Generation = self.generator.generate(question, context)
         min_rel = self.config.min_relevance
-        low = bool(min_rel) and (not hits or hits[0].score < min_rel)
-        refused = low or (not hits) or (not gen.citations)
+        low = bool(min_rel) and (not retrieved or retrieved[0].score < min_rel)
+        refused = low or (not retrieved) or (not gen.citations)
         latency = (time.perf_counter() - started) * 1000.0
+        ctx_ids = [c.chunk.chunk_id for c in context]
         if low:
-            # 拒答：不返回引用/答案，避免引用无关证据（检索结果仍保留在 trace 中）
+            # 拒答：不返回引用/答案，避免引用无关证据（检索/上下文仍保留在 trace 中）
             return Answer(
-                answer="", retrieved=hits,
-                context_chunk_ids=[h.chunk.chunk_id for h in hits], refused=True,
+                answer="", retrieved=retrieved, context=context,
+                context_chunk_ids=ctx_ids, refused=True,
                 prompt_tokens=gen.prompt_tokens, completion_tokens=0,
                 cost_usd=gen.cost_usd, latency_ms=latency,
             )
         return Answer(
             answer=gen.answer,
-            retrieved=hits,
+            retrieved=retrieved,
+            context=context,
             citations=gen.citations,
-            context_chunk_ids=[h.chunk.chunk_id for h in hits],
+            context_chunk_ids=ctx_ids,
             refused=refused,
             prompt_tokens=gen.prompt_tokens,
             completion_tokens=gen.completion_tokens,

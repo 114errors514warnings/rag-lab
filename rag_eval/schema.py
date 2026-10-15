@@ -83,6 +83,8 @@ class SystemAnswer(BaseModel):
     citations: list[str] = Field(default_factory=list)
     #: 最终送进 LLM 的上下文中的 chunk（v2：Context Evidence Coverage 用）
     context_chunk_ids: list[str] = Field(default_factory=list)
+    #: 上下文单元（含扩展；用于把上下文映射回证据）
+    context: list[RetrievedChunk] = Field(default_factory=list)
     #: 拒答标记（no_answer 题正确拒答用）
     refused: bool = False
     prompt_tokens: int = 0
