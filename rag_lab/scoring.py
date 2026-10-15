@@ -33,8 +33,9 @@ class CaseScore:
     answer_accuracy: float
     no_answer_correct: float | None
     citation_support: float | None
-    latency_ms: float
-    cost_usd: float
+    leakage_rate: float | None = None
+    latency_ms: float = 0.0
+    cost_usd: float = 0.0
     prompt_tokens: int = 0
     completion_tokens: int = 0
 
@@ -51,10 +52,19 @@ def _context_units(ans) -> list[dict]:
     return [{k: getattr(c, k) for k in UNIT_KEYS} for c in ans.retrieved if c.chunk_id in keep]
 
 
+def _leakage(case, ans) -> float | None:
+    """跨项目混入率：检索结果中不属于该用例 project 的块占比（无 project 则 None）。"""
+    if not case.project_id or not ans.retrieved:
+        return None
+    foreign = [c for c in ans.retrieved if (c.project_id or case.project_id) != case.project_id]
+    return round(len(foreign) / len(ans.retrieved), 4)
+
+
 def score_case(case, ans, k: int) -> CaseScore:
     gold_sets = normalize_gold_sets(case.gold_evidence)
     units = _units(ans)
     ctx = _context_units(ans)
+    leakage = _leakage(case, ans)
 
     base = dict(
         case_id=case.id,
@@ -69,6 +79,7 @@ def score_case(case, ans, k: int) -> CaseScore:
         return CaseScore(
             coverage=0.0, precision=0.0, mrr=0.0, ndcg=0.0, context_coverage=0.0,
             answer_accuracy=correct, no_answer_correct=correct, citation_support=None,
+            leakage_rate=leakage,
             latency_ms=base["latency_ms"], cost_usd=base["cost_usd"],
             prompt_tokens=ans.prompt_tokens, completion_tokens=ans.completion_tokens,
             case_id=case.id, query_type=base["query_type"], split=case.split,
@@ -106,6 +117,7 @@ def score_case(case, ans, k: int) -> CaseScore:
         coverage=coverage, precision=precision, mrr=mrr, ndcg=ndcg,
         context_coverage=ctx_cov, answer_accuracy=answer_accuracy,
         no_answer_correct=None, citation_support=round(citation_support, 4),
+        leakage_rate=leakage,
         latency_ms=base["latency_ms"], cost_usd=base["cost_usd"],
         prompt_tokens=ans.prompt_tokens, completion_tokens=ans.completion_tokens,
     )
@@ -130,6 +142,8 @@ def aggregate(scores: list[CaseScore], k: int) -> dict:
         "answer_accuracy": round(micro_average(col(scores, "answer_accuracy")), 4),
         "no_answer_accuracy": round(micro_average(col(no_answer, "no_answer_correct")), 4),
         "citation_support": round(micro_average(col(answerable, "citation_support")), 4),
+        "leakage_rate": round(
+            micro_average([s.leakage_rate for s in scores if s.leakage_rate is not None]), 4),
         "avg_latency_ms": round(mean_or_zero(latencies), 3),
         "p95_latency_ms": round(percentile(latencies, 0.95), 3),
         "cost_per_query_usd": round(mean_or_zero(costs), 8),

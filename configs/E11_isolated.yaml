@@ -1,0 +1,24 @@
+experiment_id: E11_isolated
+description: 多项目隔离 = on（按 case.project_id 过滤检索）；基座 = Dense + bge-m3 + Rerank + 拒答
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  isolation: true
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  leakage_rate:
+    max: 0.0                 # 跨项目混入率必须为 0

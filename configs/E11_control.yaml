@@ -1,0 +1,24 @@
+experiment_id: E11_control
+description: 多项目隔离 = off（负对照：不按 project 过滤，预期泄漏 > 0）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  isolation: false
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  leakage_rate:
+    max: 0.0                 # 负对照：预期 FAIL（证明门禁能抓泄漏）

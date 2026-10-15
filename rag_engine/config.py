@@ -51,6 +51,8 @@ class EngineConfig:
     context_max_chunks: int = 10
     #: 上下文 Token 预算（0=不限制）；>0 时由 ContextBuilder 裁剪
     context_budget_tokens: int = 0
+    #: 多项目隔离：True 时按 case.project_id 过滤检索（E11）
+    isolation: bool = True
 
     # --- 生成 ---
     generator: str = "extractive"  # extractive（离线默认）| openai

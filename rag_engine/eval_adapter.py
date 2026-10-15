@@ -45,6 +45,8 @@ class MyPipeline:
             parts.append(tag)
         if getattr(cfg, "context", "none") != "none":
             parts.append(f"context:{cfg.context}")
+        if not getattr(cfg, "isolation", True):
+            parts.append("isolation:off")
         parts.append("extractive")
         return "rag_engine(" + " + ".join(parts) + ")"
 
@@ -61,7 +63,8 @@ class MyPipeline:
         return self.pipeline
 
     def answer(self, case: EvalCase, k: int) -> SystemAnswer:
-        result = self._ensure().answer(case.question, k=k, project_id=case.project_id)
+        project_id = case.project_id if getattr(self.config, "isolation", True) else None
+        result = self._ensure().answer(case.question, k=k, project_id=project_id)
 
         def _rc(hit) -> RetrievedChunk:
             return RetrievedChunk(
