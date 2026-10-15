@@ -19,7 +19,8 @@ E 计划 = 在系统上做**单变量实验**，量化归因、优化质量/成�
 | E07 | Query Rewrite / Multi-query | ⚠️ 未通过（recall 持平；mrr 略降，落在方差内） | [`E07/`](E07/) |
 | E08 | 上下文扩展（top-N 进上下文） | ✅ 通过（context_coverage 0.963→1.0） | [`E08/`](E08/) |
 | E09 | Context Budget（去重 + 预算裁剪） | ✅ 门禁通过（有 token↔覆盖 权衡） | [`E09/`](E09/) |
-| E10–E12 | 增量索引 / 隔离 / Tool | ⬜ 未做 | — |
+| E10 | 增量索引（vs 全量重建） | ✅ 机制验证（改 1 文档仅重建 7/111 块） | [`E10/`](E10/) |
+| E11–E12 | 隔离 / Tool | ⬜ 未做 | — |
 
 - 命名：`E{nn}/stage-E{nn}-report.md` 与 `stage-E{nn}-architecture.md`。
 - **S 计划（系统建造）在另一棵树**：[`../S/`](../S/)。

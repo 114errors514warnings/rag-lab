@@ -73,6 +73,7 @@ docs/
 | E07 · Query Rewrite / Multi-query | ⚠️ 未通过（无增益） | [`../reports/E/E07/`](../reports/E/E07/) |
 | E08 · 上下文扩展 | ✅ 通过（context_coverage 0.963→1.0） | [`../reports/E/E08/`](../reports/E/E08/) |
 | E09 · Context Budget | ✅ 门禁通过（token↔覆盖权衡） | [`../reports/E/E09/`](../reports/E/E09/) |
-| E10–E12 | ⬜ 未做 | — |
+| E10 · 增量索引 | ✅ 机制验证（7/111 块重建） | [`../reports/E/E10/`](../reports/E/E10/) |
+| E11–E12 | ⬜ 未做 | — |
 
 > 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。
