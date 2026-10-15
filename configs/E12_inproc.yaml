@@ -1,0 +1,25 @@
+experiment_id: E12_inproc
+description: 服务化对照 · 进程内调用（同 E11_isolated 配置，isolation=on）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+sut: inproc
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  isolation: true
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  leakage_rate:
+    max: 0.0

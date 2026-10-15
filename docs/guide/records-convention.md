@@ -75,6 +75,6 @@ docs/
 | E09 · Context Budget | ✅ 门禁通过（token↔覆盖权衡） | [`../reports/E/E09/`](../reports/E/E09/) |
 | E10 · 增量索引 | ✅ 机制验证（7/111 块重建） | [`../reports/E/E10/`](../reports/E/E10/) |
 | E11 · 多项目隔离 | ✅ 通过（leakage_rate=0；负对照 FAIL） | [`../reports/E/E11/`](../reports/E/E11/) |
-| E12 | ⬜ 未做 | — |
+| E12 · 服务化与 Tool 接口 | ✅ 通过（HTTP 端到端，隔离不破） | [`../reports/E/E12/`](../reports/E/E12/) |
 
 > 总纲见 [`implementation-plan.md`](implementation-plan.md)（S）与 [`experiment-plan-E01-E12.md`](experiment-plan-E01-E12.md)（E）。

@@ -27,9 +27,34 @@ app = FastAPI(title="RAG Knowledge Service", version="0.1.0")
 _state: dict = {}
 
 
+def _config_from_env() -> EngineConfig:
+    """服务端引擎配置：默认离线；可用环境变量覆盖（便于经 HTTP 跑与 E 线同一配置）。"""
+    import os
+
+    kwargs: dict = {}
+    for field, env, cast in (
+        ("chunk_size", "RAG_CHUNK_SIZE", int),
+        ("chunk_overlap", "RAG_CHUNK_OVERLAP", int),
+        ("chunking", "RAG_CHUNKING", str),
+        ("embed_provider", "RAG_EMBED_PROVIDER", str),
+        ("embed_model", "RAG_EMBED_MODEL", str),
+        ("embed_dim", "RAG_EMBED_DIM", int),
+        ("retrieval", "RAG_RETRIEVAL", str),
+        ("rerank", "RAG_RERANK", str),
+        ("rerank_model", "RAG_RERANK_MODEL", str),
+        ("rerank_candidates", "RAG_RERANK_CANDIDATES", int),
+        ("min_relevance", "RAG_MIN_RELEVANCE", float),
+        ("isolation", "RAG_ISOLATION", lambda v: v.strip().lower() in ("1", "true", "yes", "on")),
+    ):
+        value = os.environ.get(env)
+        if value is not None:
+            kwargs[field] = cast(value)
+    return EngineConfig(**kwargs)
+
+
 @app.on_event("startup")
 def _startup() -> None:
-    config = EngineConfig()
+    config = _config_from_env()
     _state["pipeline"] = load_or_build(config, ROOT / config.raw_dir)
 
 
@@ -54,7 +79,10 @@ def search(query: str, k: int = 5, project_id: str | None = None) -> dict:
     return {"results": [
         {"chunk_id": h.chunk.chunk_id, "source": h.chunk.meta.get("source"),
          "score": h.score, "snippet": h.chunk.text[:200],
-         "project_id": h.chunk.meta.get("project_id")}
+         "project_id": h.chunk.meta.get("project_id"),
+         "start_line": h.chunk.meta.get("start_line"),
+         "end_line": h.chunk.meta.get("end_line"),
+         "symbol": h.chunk.meta.get("symbol")}
         for h in hits
     ]}
 

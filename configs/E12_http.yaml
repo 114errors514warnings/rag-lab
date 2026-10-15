@@ -1,0 +1,25 @@
+experiment_id: E12_http
+description: 服务化 · 经真实 HTTP 调用（服务端须以同配置启动）
+dataset: data/golden/cases.jsonl
+suite_split: all
+k: 5
+sut: http
+system:
+  chunk_size: 512
+  chunk_overlap: 80
+  chunking: fixed
+  embed_provider: siliconflow
+  embed_model: BAAI/bge-m3
+  embed_dim: 1024
+  top_k: 5
+  retrieval: dense
+  rerank: siliconflow
+  rerank_model: BAAI/bge-reranker-v2-m3
+  rerank_candidates: 20
+  min_relevance: 0.05
+  isolation: true
+  generator: extractive
+  max_context_chunks: 5
+gates:
+  leakage_rate:
+    max: 0.0             # 经 HTTP 也必须零泄漏

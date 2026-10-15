@@ -73,8 +73,14 @@ def main(argv: list[str] | None = None) -> int:
                                      else args.config)
 
     engine = EngineConfig(**cfg.system)
-    sut = MyPipeline(engine)
-    actual = sut._ensure().config  # noqa: SLF001 - 取实际生效配置用于 run_id
+    if getattr(cfg, "sut", "inproc") == "http":
+        from rag_engine.eval_http import HttpPipeline
+
+        sut = HttpPipeline(engine)
+        actual = engine  # 经 HTTP：无本地流水线，用声明配置做 run_id
+    else:
+        sut = MyPipeline(engine)
+        actual = sut._ensure().config  # noqa: SLF001 - 取实际生效配置用于 run_id
 
     cases, data_sha = load_cases(ROOT / cfg.dataset)
     cases = filter_split(cases, cfg.suite_split)

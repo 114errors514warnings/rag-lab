@@ -29,6 +29,8 @@ class ExperimentConfig:
     system: dict = field(default_factory=dict)
     #: 预声明门槛：{metric: {"min_delta":..|"max":..|"max_delta":..}}
     gates: dict = field(default_factory=dict)
+    #: 被测系统接入方式：inproc（进程内，默认）| http（经真实 HTTP 服务）
+    sut: str = "inproc"
     #: 对比基线 run_id 或 metrics.json 路径
     baseline: str | None = None
 
@@ -37,7 +39,7 @@ class ExperimentConfig:
         data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
         unknown = set(data) - {
             "experiment_id", "description", "dataset", "suite_split", "k",
-            "system", "gates", "baseline",
+            "system", "gates", "baseline", "sut",
         }
         if unknown:
             raise ValueError(f"未知配置字段：{sorted(unknown)}")

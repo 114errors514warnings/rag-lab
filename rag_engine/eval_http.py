@@ -32,7 +32,6 @@ class HttpPipeline(MyPipeline):
         if case.project_id:
             params["project_id"] = case.project_id
         started = time.perf_counter()
-        results: list[dict] = []
         try:
             resp = httpx.get(f"{self.base_url}/search", params=params, timeout=30.0)
             resp.raise_for_status()
@@ -41,17 +40,26 @@ class HttpPipeline(MyPipeline):
             results = []
         retrieved = [
             RetrievedChunk(chunk_id=x["chunk_id"], score=float(x.get("score", 0.0)),
-                           source=x.get("source"), project_id=x.get("project_id"))
+                           source=x.get("source"), project_id=x.get("project_id"),
+                           start_line=x.get("start_line"), end_line=x.get("end_line"),
+                           symbol=x.get("symbol"))
             for x in results
         ]
+        latency = (time.perf_counter() - started) * 1000.0
+        ctx_ids = [r.chunk_id for r in retrieved]
+        min_rel = getattr(self.config, "min_relevance", 0.0)
+        low = bool(min_rel) and (not retrieved or retrieved[0].score < min_rel)
+        if low:
+            return SystemAnswer(answer="", retrieved=retrieved, context=retrieved,
+                                context_chunk_ids=ctx_ids, citations=[], refused=True,
+                                prompt_tokens=max(1, len(case.question)),
+                                latency_ms=latency)
         answer = " ".join(x.get("snippet", "") for x in results[:3])
         citations = [x["chunk_id"] for x in results[:3]]
         return SystemAnswer(
-            answer=answer,
-            retrieved=retrieved,
-            citations=citations,
+            answer=answer, retrieved=retrieved, context=retrieved,
+            context_chunk_ids=ctx_ids, citations=citations, refused=not results,
             prompt_tokens=max(1, len(case.question)),
             completion_tokens=max(1, len(answer) // 2),
-            cost_usd=0.0,
-            latency_ms=(time.perf_counter() - started) * 1000.0,
+            cost_usd=0.0, latency_ms=latency,
         )
