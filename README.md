@@ -79,20 +79,22 @@ RAG 系统线 S1–S7（✅ 已达标） ┐
 RAG 实验线 E00–E12（✅ 已执行完成）┴─▶ Project Knowledge Engine（✅ 含 MCP 工具面）
                                               │
                                               ▼
-                       Tool Calling / Tool Executor（agent-runtime，关联集内，已检出）
+                       Tool Calling / Tool Executor（agent-runtime · T01–T06 ✅）
                                               │
                                               ▼
-                       Agent Runtime A01–A10（⬜ 0/10）
+                       Agent Runtime A01–A10（✅ 10/10，M1–M4）
 ```
 
 - 新计划（A01–A10）：`docs/guide/agent-runtime-plan-A01-A10.md`（原文 `docs/guide/assets/…docx`）
 - 综合路线图（S/E/T/A 合流、现状盘点、里程碑、复用映射、下一步）：`docs/guide/roadmap-merged.md`
 - **E 线总结**（结论 / 负面结果 / 开放项）：`docs/reports/E/summary.md`
 
-## 下一步（启动 A 线）
+## 下一步（可用性与负结论裁决）
 
-> E 线已收官（`docs/reports/E/summary.md`）；综合路线图见 `docs/guide/roadmap-merged.md`。
+> E 线已收官（`docs/reports/E/summary.md`）；A 线已收官（`agent-runtime/docs/reports/A-line-summary.md`）；
+> 综合路线图见 `docs/guide/roadmap-merged.md`。
 
-1. 在 `agent-runtime`（关联集内独立仓库，已本地检出）按手册推进 **A01–A10**：M1（A01–A03）→ M2（A04–A06）→ M3（A07–A09）→ M4（A10）；其前置 Tool Calling / Executor 见该仓库自身文档。
-2. 复用本仓库的评测纪律（固定套件 / 预声明门禁 / run_id 报告）与 RAG Tool 接口（`search_project`/`get_symbol`/`read_context`）。
+1. **E 线口径裁决**：E03/E05/E06b/E07 是接受负结论，还是换更硬的套件重测——决定写进 `docs/reports/E/summary.md`。
+2. **工具面可用性**：`agent-runtime` 已提供可安装的 MCP 服务（`agent-runtime-mcp`，见其 `docs/guide/mcp-integration.md`）；
+   下一步是 HTTP 传输 + token 鉴权。
 3. E 线遗留开放项见 `docs/reports/E/summary.md` §4（口径复核、两套代码语料统一、Docker、LLM 注入防护）。
