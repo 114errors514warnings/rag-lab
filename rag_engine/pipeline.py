@@ -19,7 +19,7 @@ from .generate.generator import Generation, build_generator
 from .index.vector_store import NumpyVectorStore
 from .ingest.chunker import chunk_documents
 from .ingest.clean import clean_documents, dedupe_documents
-from .ingest.loader import iter_source_files, load_tree
+from .ingest.loader import iter_source_files, load_dir, load_tree
 from .ingest.metadata import build_chunk_meta
 from .retrieve.dense import DenseRetriever
 from .schema import Document, Retrieved
@@ -223,14 +223,16 @@ class RAGPipeline:
         )
 
     # ------------------------------------------------------------ 持久化
-    def persist(self, index_dir: Path | str, manifest: dict[str, str]) -> None:
+    def persist(self, index_dir: Path | str, manifest: dict[str, str],
+                project_id: str | None = None) -> None:
         index_dir = Path(index_dir)
         index_dir.mkdir(parents=True, exist_ok=True)
         self.embedder.save(index_dir)
         self.store.save(index_dir)
         (index_dir / "index.json").write_text(
             json.dumps(
-                {"config_fingerprint": self.config.fingerprint(), "manifest": manifest},
+                {"config_fingerprint": self.config.fingerprint(), "manifest": manifest,
+                 "project_id": project_id},
                 ensure_ascii=False,
                 indent=2,
             ),
@@ -253,8 +255,13 @@ class RAGPipeline:
         return cls(config, embedder, store, retriever, generator)
 
 
-def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None) -> RAGPipeline:
-    """有可用索引则载入，否则从 ``raw_dir`` 重建并持久化。"""
+def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None,
+                  project_id: str | None = None) -> RAGPipeline:
+    """有可用索引则载入，否则从 ``raw_dir`` 重建并持久化。
+
+    ``project_id`` 非空时把整份语料当作**一个项目**（``load_dir``），
+    而不是按一级子目录分项目（``load_tree``）；它同时参与缓存失效判断。
+    """
     raw_dir = Path(raw_dir or config.raw_dir)
     index_dir = Path(config.index_dir)
     manifest = compute_manifest(raw_dir)
@@ -265,10 +272,12 @@ def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None) -> RA
             meta = json.loads(index_meta.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             meta = {}
-        if meta.get("config_fingerprint") == config.fingerprint() and meta.get("manifest") == manifest:
+        if (meta.get("config_fingerprint") == config.fingerprint()
+                and meta.get("manifest") == manifest
+                and meta.get("project_id") == project_id):
             return RAGPipeline.load(config, index_dir)
 
-    docs = load_tree(raw_dir)
+    docs = load_dir(raw_dir, project_id=project_id) if project_id else load_tree(raw_dir)
     pipeline = RAGPipeline.build(config, docs)
-    pipeline.persist(index_dir, manifest)
+    pipeline.persist(index_dir, manifest, project_id=project_id)
     return pipeline
