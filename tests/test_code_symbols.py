@@ -42,3 +42,14 @@ def test_dependency_graph_callers_and_callees() -> None:
     assert "parse_query" in graph["handle_request"]["callees"]
     assert "handle_request" in graph["parse_query"]["callers"]
     assert "validate_page" in graph["PageQuery.validate"]["callees"]
+
+
+def test_bom_and_broken_files_do_not_break_index(tmp_path) -> None:
+    """含 BOM 或语法错误的文件应被跳过，而不是让整个索引失败。"""
+    (tmp_path / "good.py").write_text("def good_fn():\n    return 1\n", encoding="utf-8")
+    (tmp_path / "bom.py").write_text("def bom_fn():\n    return 2\n", encoding="utf-8-sig")
+    (tmp_path / "broken.py").write_text("def broken(:\n", encoding="utf-8")
+
+    symbols = {chunk.meta["symbol"] for chunk in index_code(tmp_path)}
+    assert "good_fn" in symbols
+    assert "bom_fn" in symbols          # BOM 不再导致解析失败

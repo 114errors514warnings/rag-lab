@@ -45,8 +45,12 @@ def extract_symbols(path: Path | str, root: Path | str) -> list[Chunk]:
     rel = path.resolve().relative_to(root.resolve()).as_posix()
     project_id = rel.split("/", 1)[0] if "/" in rel else "root"
     rel_in_project = rel.split("/", 1)[1] if "/" in rel else rel
-    source = path.read_text(encoding="utf-8", errors="replace")
-    tree = ast.parse(source)
+    source = path.read_text(encoding="utf-8-sig", errors="replace")
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        # 单个文件语法错误（含非法编码/半截文件）不应让整库索引失败
+        return []
 
     chunks: list[Chunk] = []
 
