@@ -63,3 +63,7 @@ $env:SILICONFLOW_API_KEY = "<key>"                    # 密钥仅环境变量，
 python scripts/run_eval.py --config configs/E06_rerank.yaml --baseline <run_id>
 python scripts/exp_e10_incremental.py                 # E10 机制基准（离线）
 ```
+
+## 5. 口径裁决（2026-11-11）
+
+E03 / E05 / E06b / E07 的负结论已逐条裁决（接受 / 改口径 / 部分接受），并写明重测触发条件：见 [adjudication.md](adjudication.md)。

@@ -130,11 +130,16 @@ class RAGPipeline:
         self.store = store
         self.retriever = retriever
         self.generator = generator
+        #: 最近一次构建的增量统计（``{"mode","reused","embedded"}``）；载入的索引为 None
+        self.last_incremental: dict | None = None
 
     # ------------------------------------------------------------ 构建
     @classmethod
-    def build(cls, config: EngineConfig, docs: list[Document]) -> "RAGPipeline":
-        # 阶段二：清洗 + 去重 + 元数据 enrichment（切块边界契约不变，chunk_id 仍稳定）
+    def _prepare_chunks(cls, config: EngineConfig, docs: list[Document]):
+        """清洗 + 去重 + 切块 + 元数据 enrichment（**不嵌入**）。
+
+        抽出来是为了增量索引：切块很便宜，真正贵的是 embedding。
+        """
         docs = dedupe_documents(clean_documents(docs))[0]
         if getattr(config, "chunking", "fixed") == "symbol":
             from .ingest.symbol_chunker import chunk_documents_symbol
@@ -155,6 +160,11 @@ class RAGPipeline:
                 chunk.meta.update(build_chunk_meta(
                     doc, doc.text, chunk.meta.get("start", 0), chunk.meta.get("end", 0),
                     chunk.meta.get("order", 0)))
+        return docs, chunks
+
+    @classmethod
+    def build(cls, config: EngineConfig, docs: list[Document]) -> "RAGPipeline":
+        docs, chunks = cls._prepare_chunks(config, docs)
         texts = [c.text for c in chunks]
         embedder = build_embedder(config.embed_provider, config.embed_dim, config.embed_model, texts)
         vectors = embedder.embed(texts)
@@ -162,7 +172,53 @@ class RAGPipeline:
         store.add(chunks, vectors)
         retriever = _make_retriever(config, embedder, store)
         generator = build_generator(config.generator, config.gen_model, config.max_context_chunks)
-        return cls(config, embedder, store, retriever, generator)
+        pipeline = cls(config, embedder, store, retriever, generator)
+        pipeline.last_incremental = {"mode": "full", "reused": 0, "embedded": len(chunks)}
+        return pipeline
+
+    @classmethod
+    def build_incremental(cls, config: EngineConfig, docs: list[Document],
+                          old: "RAGPipeline | None" = None, embedder=None) -> "RAGPipeline":
+        """只对**新增/内容变化**的切片做 embedding，其余复用旧向量。
+
+        复用条件必须同时满足 ``chunk_id`` 相同 **且文本相同**——
+        位置没变但内容改了（同一 chunk_id）时复用旧向量会得到"索引说旧、文件是新"的错误结果。
+        """
+        import numpy as np
+
+        _, chunks = cls._prepare_chunks(config, docs)
+        old_map: dict[str, tuple[str, object]] = {}
+        if old is not None and old.store._matrix is not None:
+            for index, chunk in enumerate(old.store.chunks):
+                old_map[chunk.chunk_id] = (chunk.text, old.store._matrix[index])
+
+        missing = [c for c in chunks if old_map.get(c.chunk_id, (None, None))[0] != c.text]
+        if embedder is None:
+            embedder = build_embedder(config.embed_provider, config.embed_dim,
+                                      config.embed_model, [])
+        fresh = (embedder.embed([c.text for c in missing]) if missing
+                 else np.zeros((0, config.embed_dim), dtype=np.float32))
+        fresh_map = {c.chunk_id: fresh[i] for i, c in enumerate(missing)}
+
+        rows = []
+        for chunk in chunks:
+            cached = old_map.get(chunk.chunk_id)
+            if cached is not None and cached[0] == chunk.text:
+                rows.append(cached[1])
+            else:
+                rows.append(fresh_map[chunk.chunk_id])
+        matrix = np.vstack(rows).astype(np.float32) if rows else np.zeros(
+            (0, config.embed_dim), dtype=np.float32)
+
+        store = NumpyVectorStore()
+        store.add(chunks, matrix)
+        retriever = _make_retriever(config, embedder, store)
+        generator = build_generator(config.generator, config.gen_model, config.max_context_chunks)
+        pipeline = cls(config, embedder, store, retriever, generator)
+        pipeline.last_incremental = {"mode": "incremental" if old is not None else "full",
+                                     "reused": len(chunks) - len(missing),
+                                     "embedded": len(missing)}
+        return pipeline
 
     # ------------------------------------------------------------ 查询
     def answer(self, question: str, k: int | None = None,
@@ -272,10 +328,19 @@ def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None,
             meta = json.loads(index_meta.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             meta = {}
-        if (meta.get("config_fingerprint") == config.fingerprint()
-                and meta.get("manifest") == manifest
-                and meta.get("project_id") == project_id):
+        same_config = meta.get("config_fingerprint") == config.fingerprint()
+        same_project = meta.get("project_id") == project_id
+        if same_config and meta.get("manifest") == manifest and same_project:
             return RAGPipeline.load(config, index_dir)
+
+        # 增量重建：只对"外部 embedding"有意义——
+        # hashing 的 idf 依赖整份语料，改一个文件会改变所有向量，增量反而错。
+        if same_config and same_project and config.embed_provider in ("openai", "siliconflow"):
+            old = RAGPipeline.load(config, index_dir)
+            docs = load_dir(raw_dir, project_id=project_id) if project_id else load_tree(raw_dir)
+            pipeline = RAGPipeline.build_incremental(config, docs, old)
+            pipeline.persist(index_dir, manifest, project_id=project_id)
+            return pipeline
 
     docs = load_dir(raw_dir, project_id=project_id) if project_id else load_tree(raw_dir)
     pipeline = RAGPipeline.build(config, docs)
