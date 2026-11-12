@@ -44,10 +44,16 @@ def _file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def compute_manifest(raw_dir: Path | str) -> dict[str, str]:
-    """来源文件 -> 内容 sha256，用于判断索引是否需要重建。"""
+def compute_manifest(raw_dir: Path | str, extensions=None,
+                     exclude_dirs=None) -> dict[str, str]:
+    """来源文件 -> 内容 sha256，用于判断索引是否需要重建。
+
+    过滤规则（后缀 / 排除目录）必须一起参与，否则"改了过滤条件但缓存没失效"
+    会出现"索引说旧、文件是新的"。
+    """
     raw_dir = Path(raw_dir)
-    return {p.relative_to(raw_dir).as_posix(): _file_sha256(p) for p in iter_source_files(raw_dir)}
+    return {p.relative_to(raw_dir).as_posix(): _file_sha256(p)
+            for p in iter_source_files(raw_dir, extensions, exclude_dirs)}
 
 
 def _make_retriever(config: EngineConfig, embedder, store):
@@ -312,15 +318,17 @@ class RAGPipeline:
 
 
 def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None,
-                  project_id: str | None = None) -> RAGPipeline:
+                  project_id: str | None = None, extensions=None,
+                  exclude_dirs=None) -> RAGPipeline:
     """有可用索引则载入，否则从 ``raw_dir`` 重建并持久化。
 
     ``project_id`` 非空时把整份语料当作**一个项目**（``load_dir``），
     而不是按一级子目录分项目（``load_tree``）；它同时参与缓存失效判断。
+    ``extensions`` / ``exclude_dirs`` 会同时作用于 manifest 与加载（见 ``compute_manifest``）。
     """
     raw_dir = Path(raw_dir or config.raw_dir)
     index_dir = Path(config.index_dir)
-    manifest = compute_manifest(raw_dir)
+    manifest = compute_manifest(raw_dir, extensions, exclude_dirs)
 
     index_meta = index_dir / "index.json"
     if index_meta.exists() and (index_dir / "chunks.jsonl").exists():
@@ -337,12 +345,16 @@ def load_or_build(config: EngineConfig, raw_dir: Path | str | None = None,
         # hashing 的 idf 依赖整份语料，改一个文件会改变所有向量，增量反而错。
         if same_config and same_project and config.embed_provider in ("openai", "siliconflow"):
             old = RAGPipeline.load(config, index_dir)
-            docs = load_dir(raw_dir, project_id=project_id) if project_id else load_tree(raw_dir)
+            docs = (load_dir(raw_dir, project_id=project_id, extensions=extensions,
+                             exclude_dirs=exclude_dirs)
+                    if project_id else load_tree(raw_dir, extensions, exclude_dirs))
             pipeline = RAGPipeline.build_incremental(config, docs, old)
             pipeline.persist(index_dir, manifest, project_id=project_id)
             return pipeline
 
-    docs = load_dir(raw_dir, project_id=project_id) if project_id else load_tree(raw_dir)
+    docs = (load_dir(raw_dir, project_id=project_id, extensions=extensions,
+                     exclude_dirs=exclude_dirs)
+            if project_id else load_tree(raw_dir, extensions, exclude_dirs))
     pipeline = RAGPipeline.build(config, docs)
     pipeline.persist(index_dir, manifest, project_id=project_id)
     return pipeline

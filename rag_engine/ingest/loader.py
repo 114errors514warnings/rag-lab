@@ -14,7 +14,45 @@ from pathlib import Path
 from ..schema import Document
 
 _SUPPORTED = {".md", ".markdown", ".txt", ".pdf", ".py"}
+
+#: 默认跳过的目录：版本库/缓存/依赖，进去只会把索引撑大、把检索带偏。
+_SKIP_DIR_NAMES = {"__pycache__", "node_modules"}
 _SLUG = re.compile(r"[^0-9a-zA-Z]+")
+
+
+def normalize_extensions(values) -> set[str]:
+    """把 ``[".cs", "tscn"]`` / ``[".cs,.tscn"]`` 规整成 ``{".cs", ".tscn"}``。
+
+    传空/None 时返回**默认集合**（不改变既有语料的行为）。
+    """
+    if not values:
+        return set(_SUPPORTED)
+    parts: list[str] = []
+    for item in values:
+        parts.extend(str(item).split(","))
+    out = set()
+    for raw in parts:
+        value = raw.strip().lower()
+        if not value:
+            continue
+        out.add(value if value.startswith(".") else "." + value)
+    return out or set(_SUPPORTED)
+
+
+def _is_excluded(relative: Path, exclude_dirs) -> bool:
+    """``exclude_dirs`` 支持目录名（``_backup``）或相对路径（``Tools/Art``）。"""
+    if not exclude_dirs:
+        return False
+    parts = relative.parts
+    names = {str(item).strip().strip("/\\").replace("\\", "/") for item in exclude_dirs if str(item).strip()}
+    posix = relative.as_posix()
+    for entry in names:
+        if "/" in entry:
+            if posix == entry or posix.startswith(entry + "/"):
+                return True
+        elif entry in parts:
+            return True
+    return False
 
 
 def _make_doc_id(rel_source: str) -> str:
@@ -47,11 +85,12 @@ def _read_pdf(path: Path) -> str:
 
 
 def load_file(path: Path | str, root: Path | str | None = None,
-              project_id: str | None = None) -> Document:
-    """解析单个文件；``root`` 用于计算相对来源路径。"""
+              project_id: str | None = None, extensions=None) -> Document:
+    """解析单个文件；``root`` 用于计算相对来源路径；``extensions`` 放宽允许的后缀。"""
     path = Path(path)
-    if path.suffix.lower() not in _SUPPORTED:
-        raise ValueError(f"不支持的文件类型：{path.suffix}（支持 {sorted(_SUPPORTED)}）")
+    allowed = normalize_extensions(extensions)
+    if path.suffix.lower() not in allowed:
+        raise ValueError(f"不支持的文件类型：{path.suffix}（允许 {sorted(allowed)}）")
     root_path = Path(root) if root is not None else path.parent
     try:
         rel = path.resolve().relative_to(root_path.resolve()).as_posix()
@@ -70,22 +109,39 @@ def load_file(path: Path | str, root: Path | str | None = None,
     )
 
 
-def iter_source_files(raw_dir: Path | str) -> list[Path]:
-    """递归列出目录下所有受支持文件（按路径排序，保证确定性）。"""
+def iter_source_files(raw_dir: Path | str, extensions=None, exclude_dirs=None) -> list[Path]:
+    """递归列出目录下所有受支持文件（按路径排序，保证确定性）。
+
+    ``extensions`` 默认沿用 ``_SUPPORTED``（不改变既有语料的行为）；
+    ``exclude_dirs`` 支持目录名（``_backup``）或相对路径（``Tools/Art``）；
+    隐藏目录（``.godot`` / ``.ai-memory`` 之类）一律跳过。
+    """
     raw_dir = Path(raw_dir)
     if not raw_dir.exists():
         return []
-    files = [p for p in raw_dir.rglob("*") if p.is_file() and p.suffix.lower() in _SUPPORTED]
+    allowed = normalize_extensions(extensions)
+    files: list[Path] = []
+    for path in raw_dir.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in allowed:
+            continue
+        relative = path.relative_to(raw_dir)
+        if any(part.startswith(".") or part in _SKIP_DIR_NAMES for part in relative.parts[:-1]):
+            continue
+        if _is_excluded(relative, exclude_dirs):
+            continue
+        files.append(path)
     return sorted(files, key=lambda p: p.as_posix())
 
 
-def load_dir(raw_dir: Path | str, project_id: str | None = None) -> list[Document]:
+def load_dir(raw_dir: Path | str, project_id: str | None = None, extensions=None,
+             exclude_dirs=None) -> list[Document]:
     """加载目录下全部文档。"""
     raw_dir = Path(raw_dir)
-    return [load_file(p, root=raw_dir, project_id=project_id) for p in iter_source_files(raw_dir)]
+    return [load_file(p, root=raw_dir, project_id=project_id, extensions=extensions)
+            for p in iter_source_files(raw_dir, extensions, exclude_dirs)]
 
 
-def load_tree(root: Path | str) -> list[Document]:
+def load_tree(root: Path | str, extensions=None, exclude_dirs=None) -> list[Document]:
     """加载一个目录树，支持多项目隔离（手册 2.1）。
 
     - 顶层文件：``project_id=None``（文档集合）。
@@ -93,9 +149,14 @@ def load_tree(root: Path | str) -> list[Document]:
     - ``source`` 始终相对 ``root``（如 ``proj-auth/auth.py``），便于证据映射并区分项目。
     """
     root = Path(root)
-    docs: list[Document] = [load_file(p, root=root) for p in iter_source_files(root)
+    docs: list[Document] = [load_file(p, root=root, extensions=extensions)
+                            for p in iter_source_files(root, extensions, exclude_dirs)
                             if p.parent.resolve() == root.resolve()]
-    for sub in sorted((d for d in root.iterdir() if d.is_dir() and not d.name.startswith(".")),
+    for sub in sorted((d for d in root.iterdir()
+                       if d.is_dir() and not d.name.startswith(".")
+                       and d.name not in _SKIP_DIR_NAMES
+                       and not _is_excluded(Path(d.name), exclude_dirs)),
                       key=lambda d: d.name):
-        docs.extend(load_file(p, root=root, project_id=sub.name) for p in iter_source_files(sub))
+        docs.extend(load_file(p, root=root, project_id=sub.name, extensions=extensions)
+                    for p in iter_source_files(sub, extensions, exclude_dirs))
     return docs
